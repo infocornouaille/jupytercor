@@ -1,0 +1,16 @@
+\documentclass{cornouaille}
+\usepackage{listings}
+\lstset{
+  basicstyle=\ttfamily,
+  columns=fullflexible,
+  frame=single,
+  breaklines=true,
+  postbreak=\mbox{\textcolor{red}{\hookrightarrow}\space},
+}
+\newcommand{\passthrough}[1]{#1}
+\providecommand{\tightlist}{% 
+\setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}
+}
+\begin{document}
+$body$
+\end{document}
