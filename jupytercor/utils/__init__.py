@@ -11,9 +11,12 @@ def is_valid_url(url: str) -> bool:
 
         Returns:
             bool: True if the url is valid, False otherwise"""
-    result = urlparse(url)
-    # Check if the scheme is http or https
-    return result.scheme in ("http", "https")
+    try:
+        result = urlparse(url)
+        # Check if the scheme is http or https
+        return result.scheme in ("http", "https")
+    except:
+        return False
 
 
 def clean_markdown(nb: nbformat) -> nbformat:
@@ -35,12 +38,24 @@ def clean_markdown(nb: nbformat) -> nbformat:
                 capture_output=True,
             )
 
+            # Check for pandoc errors
+            if html.returncode != 0:
+                raise ValueError(
+                    f"Pandoc failed to convert markdown to html with the following error: {html.stderr.decode()}"
+                )
+
             # Run a pandoc command to convert html to markdown
             result = subprocess.run(
                 ["pandoc", "-f", "html", "-t", "gfm-raw_html", "-o", "-"],
                 input=html.stdout,
                 capture_output=True,
             )
+
+            # Check for pandoc errors
+            if result.returncode != 0:
+                raise ValueError(
+                    f"Pandoc failed to convert html to markdown with the following error: {result.stderr.decode()}"
+                )
 
             # Replace the cell source with the transformed text
             cell.source = result.stdout.decode()
