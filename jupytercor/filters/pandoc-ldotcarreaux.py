@@ -5,31 +5,36 @@ Usage:
 """
 
 from string import Template
+from typing import Dict, List
 from pandocfilters import toJSONFilter, RawBlock, RawInline
 
 
-def est_vide_cell(source):
-    """Determines if a cell is empty or contains only blank lines."""
+def est_vide_cell(source: List[str]) -> bool:
+    """Determine if a cell is empty or contains only blank lines.
+    """
     for elem in source:
         if elem != "" and elem != "\n":
             return False
     return True
 
 
-def unpack_code(value, language):
+def unpack_code(value: Dict, language: str) -> Dict:
     """Unpack the body and language of a pandoc code element.
 
     Args:
         value       contents of pandoc object
         language    default language
     """
-    [[_, classes, attributes], contents] = value
 
+    # get the language and attributes from the pandoc object
+    [[_, classes, attributes], contents] = value
     if len(classes) > 0:
         language = classes[0]
-
     attributes = ", ".join("=".join(x) for x in attributes)
+
+    # split the contents into lines
     lines = contents.split("\n")
+
     return {
         "contents": contents,
         "language": language,
@@ -41,7 +46,7 @@ def unpack_code(value, language):
     }
 
 
-def unpack_metadata(meta):
+def unpack_metadata(meta: dict) -> dict:
     """Unpack the metadata to get pandoc-ldotcarreaux settings.
 
     Args:
@@ -65,8 +70,9 @@ def unpack_metadata(meta):
         return {"language": "text"}
 
 
-def ldotcarreaux(key, value, format, meta):
-    """Add ldotcarreaux
+def ldotcarreaux(key: str, value: str, format: str, meta: dict) -> list:
+    """
+    Add ldotcarreaux
     Args:
         key     type of pandoc object
         value   contents of pandoc object
@@ -80,9 +86,6 @@ def ldotcarreaux(key, value, format, meta):
     if key == "CodeBlock":
         template = Template("\\ldotcarreaux[$longueur]\n")
         Element = RawBlock
-    elif key == "Code":
-        template = Template("\\mintinline[$attributes]{$language}{$contents}")
-        Element = RawInline
     else:
         return
 
@@ -90,6 +93,7 @@ def ldotcarreaux(key, value, format, meta):
 
     code = unpack_code(value, settings["language"])
 
+    # If the code is empty, return the ldotcarreaux
     if not code["estvide"]:
         return
 
