@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
+# coding: utf-8
 
 import argparse
 import os
 import subprocess
 
 from jupytercor.images import *
-from jupytercor.latex import *
 from jupytercor.utils import *
 
 # Create an argument parser object
