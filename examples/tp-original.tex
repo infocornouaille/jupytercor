@@ -1,0 +1,1500 @@
+%%
+% Copyright (c) 2017 - 2023, Pascal Wagler;
+% Copyright (c) 2014 - 2023, John MacFarlane
+%
+% All rights reserved.
+%
+% Redistribution and use in source and binary forms, with or without
+% modification, are permitted provided that the following conditions
+% are met:
+%
+% - Redistributions of source code must retain the above copyright
+% notice, this list of conditions and the following disclaimer.
+%
+% - Redistributions in binary form must reproduce the above copyright
+% notice, this list of conditions and the following disclaimer in the
+% documentation and/or other materials provided with the distribution.
+%
+% - Neither the name of John MacFarlane nor the names of other
+% contributors may be used to endorse or promote products derived
+% from this software without specific prior written permission.
+%
+% THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+% "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+% LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
+% FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
+% COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+% INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+% BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+% LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+% CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+% LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
+% ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+% POSSIBILITY OF SUCH DAMAGE.
+%%
+
+%%
+% This is the Eisvogel pandoc LaTeX template.
+%
+% For usage information and examples visit the official GitHub page:
+% https://github.com/Wandmalfarbe/pandoc-latex-template
+%%
+
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+\PassOptionsToPackage{dvipsnames,svgnames,x11names,table}{xcolor}
+%
+\documentclass[
+  paper=a4,
+  ,captions=tableheading
+]{scrartcl}
+\usepackage{amsmath,amssymb}
+% Use setspace anyway because we change the default line spacing.
+% The spacing is changed early to affect the titlepage and the TOC.
+\usepackage{setspace}
+\setstretch{1.2}
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math} % this also loads fontspec
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+\usepackage{lmodern}
+\ifPDFTeX\else
+  % xetex/luatex font selection
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{xcolor}
+\definecolor{default-linkcolor}{HTML}{A50000}
+\definecolor{default-filecolor}{HTML}{A50000}
+\definecolor{default-citecolor}{HTML}{4077C0}
+\definecolor{default-urlcolor}{HTML}{4077C0}
+\usepackage[margin=2.5cm,includehead=true,includefoot=true,centering,]{geometry}
+\usepackage{color}
+\usepackage{fancyvrb}
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Add ',fontsize=\small' for more characters per line
+\newenvironment{Shaded}{}{}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{1.00,0.00,0.00}{\textbf{#1}}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{#1}}}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.49,0.56,0.16}{#1}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{#1}}
+\newcommand{\BuiltInTok}[1]{\textcolor[rgb]{0.00,0.50,0.00}{#1}}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{#1}}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textit{#1}}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{#1}}}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.53,0.00,0.00}{#1}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{\textbf{#1}}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.56,0.13,0.00}{#1}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{#1}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.73,0.13,0.13}{\textit{#1}}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{1.00,0.00,0.00}{\textbf{#1}}}
+\newcommand{\ExtensionTok}[1]{#1}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.02,0.16,0.49}{#1}}
+\newcommand{\ImportTok}[1]{\textcolor[rgb]{0.00,0.50,0.00}{\textbf{#1}}}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{#1}}}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{\textbf{#1}}}
+\newcommand{\NormalTok}[1]{#1}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.40,0.40,0.40}{#1}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{#1}}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.74,0.48,0.00}{#1}}
+\newcommand{\RegionMarkerTok}[1]{#1}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{#1}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.73,0.40,0.53}{#1}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{#1}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.10,0.09,0.49}{#1}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{#1}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{#1}}}}
+
+% Workaround/bugfix from jannick0.
+% See https://github.com/jgm/pandoc/issues/4302#issuecomment-360669013)
+% or https://github.com/Wandmalfarbe/pandoc-latex-template/issues/2
+%
+% Redefine the verbatim environment 'Highlighting' to break long lines (with
+% the help of fvextra). Redefinition is necessary because it is unlikely that
+% pandoc includes fvextra in the default template.
+\usepackage{fvextra}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{breaklines,fontsize=\small,commandchars=\\\{\}}
+
+% add backlinks to footnote references, cf. https://tex.stackexchange.com/questions/302266/make-footnote-clickable-both-ways
+\usepackage{footnotebackref}
+\usepackage{graphicx}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+% Set default figure placement to htbp
+\makeatletter
+\def\fps@figure{htbp}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
+\ifLuaTeX
+  \usepackage{selnolig}  % disable illegal ligatures
+\fi
+\IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same}
+\hypersetup{
+  hidelinks,
+  breaklinks=true,
+  pdfcreator={LaTeX via pandoc with the Eisvogel template}}
+\author{}
+\date{}
+
+
+
+%%
+%% added
+%%
+
+
+%
+% for the background color of the title page
+%
+
+%
+% break urls
+%
+\PassOptionsToPackage{hyphens}{url}
+
+%
+% When using babel or polyglossia with biblatex, loading csquotes is recommended
+% to ensure that quoted texts are typeset according to the rules of your main language.
+%
+\usepackage{csquotes}
+
+%
+% captions
+%
+\definecolor{caption-color}{HTML}{777777}
+\usepackage[font={stretch=1.2}, textfont={color=caption-color}, position=top, skip=4mm, labelfont=bf, singlelinecheck=false, justification=raggedright]{caption}
+\setcapindent{0em}
+
+%
+% blockquote
+%
+\definecolor{blockquote-border}{RGB}{221,221,221}
+\definecolor{blockquote-text}{RGB}{119,119,119}
+\usepackage{mdframed}
+\newmdenv[rightline=false,bottomline=false,topline=false,linewidth=3pt,linecolor=blockquote-border,skipabove=\parskip]{customblockquote}
+\renewenvironment{quote}{\begin{customblockquote}\list{}{\rightmargin=0em\leftmargin=0em}%
+\item\relax\color{blockquote-text}\ignorespaces}{\unskip\unskip\endlist\end{customblockquote}}
+
+%
+% Source Sans Pro as the de­fault font fam­ily
+% Source Code Pro for monospace text
+%
+% 'default' option sets the default
+% font family to Source Sans Pro, not \sfdefault.
+%
+\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
+    \usepackage[default]{sourcesanspro}
+  \usepackage{sourcecodepro}
+  \else % if not pdftex
+    \usepackage[default]{sourcesanspro}
+  \usepackage{sourcecodepro}
+
+  % XeLaTeX specific adjustments for straight quotes: https://tex.stackexchange.com/a/354887
+  % This issue is already fixed (see https://github.com/silkeh/latex-sourcecodepro/pull/5) but the
+  % fix is still unreleased.
+  % TODO: Remove this workaround when the new version of sourcecodepro is released on CTAN.
+  \ifxetex
+    \makeatletter
+    \defaultfontfeatures[\ttfamily]
+      { Numbers   = \sourcecodepro@figurestyle,
+        Scale     = \SourceCodePro@scale,
+        Extension = .otf }
+    \setmonofont
+      [ UprightFont    = *-\sourcecodepro@regstyle,
+        ItalicFont     = *-\sourcecodepro@regstyle It,
+        BoldFont       = *-\sourcecodepro@boldstyle,
+        BoldItalicFont = *-\sourcecodepro@boldstyle It ]
+      {SourceCodePro}
+    \makeatother
+  \fi
+  \fi
+
+%
+% heading color
+%
+\definecolor{heading-color}{RGB}{40,40,40}
+\addtokomafont{section}{\color{heading-color}}
+% When using the classes report, scrreprt, book,
+% scrbook or memoir, uncomment the following line.
+%\addtokomafont{chapter}{\color{heading-color}}
+
+%
+% variables for title, author and date
+%
+\usepackage{titling}
+\title{}
+\author{}
+\date{}
+
+%
+% tables
+%
+
+%
+% remove paragraph indention
+%
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{6pt plus 2pt minus 1pt}
+\setlength{\emergencystretch}{3em}  % prevent overfull lines
+
+%
+%
+% Listings
+%
+%
+
+
+%
+% header and footer
+%
+\usepackage[headsepline,footsepline]{scrlayer-scrpage}
+
+\newpairofpagestyles{eisvogel-header-footer}{
+  \clearpairofpagestyles
+  \ihead*{}
+  \chead*{}
+  \ohead*{}
+  \ifoot*{}
+  \cfoot*{}
+  \ofoot*{\thepage}
+  \addtokomafont{pageheadfoot}{\upshape}
+}
+\pagestyle{eisvogel-header-footer}
+
+
+
+%%
+%% end added
+%%
+
+\begin{document}
+
+%%
+%% begin titlepage
+%%
+
+%%
+%% end titlepage
+%%
+
+
+
+\hypertarget{1-le-probluxe8me-du-rendu-de-monnaie}{%
+\section{1. Le problème du rendu de
+monnaie}\label{1-le-probluxe8me-du-rendu-de-monnaie}}
+
+Rappel : le problème du rendu de monnaie consiste à déterminer le nombre
+minimal de billets et pièces nécessaires pour rendre une somme donnée.
+Dans toute la suite, les « pièces » désignent indifféremment les
+véritables pièces que les billets. Par exemple, supposons qu'on dispose
+d'un système monétaire formé des valeurs 200, 100, 50, 20, 10, 5, 2 et 1
+€. Dans cet exemple, pour simplifier, les centimes et le billet de 500 €
+sont ignorés.
+
+On a mis en place l\textquotesingle algorithme suivant :
+\includegraphics{image.png}
+
+\hypertarget{il-sagit-bien-dun-algorithme-glouton-car-uxe0-chaque-uxe9tape-on-fait-le-meilleur-choix-sans-revenir-en-arriuxe8re}{%
+\paragraph{Il s\textquotesingle agit bien d\textquotesingle un
+algorithme glouton car à chaque étape, on fait le meilleur choix sans
+revenir en
+arrière.}\label{il-sagit-bien-dun-algorithme-glouton-car-uxe0-chaque-uxe9tape-on-fait-le-meilleur-choix-sans-revenir-en-arriuxe8re}}
+
+\hypertarget{question-1}{%
+\subsubsection{Question 1}\label{question-1}}
+
+Compléter la fonction \texttt{renduMonnaie} ci-dessous qui prend comme
+argument un entier \texttt{s} et qui renvoie la liste minimale des
+pièces à rendre de somme égale à \texttt{s}.
+
+Par exemple, \texttt{renduMonnaie(43)} devra renvoyer la liste
+\texttt{{[}20,20,2,1{]}}.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{valeurs }\OperatorTok{=}\NormalTok{ [}\DecValTok{200}\NormalTok{, }\DecValTok{100}\NormalTok{, }\DecValTok{50}\NormalTok{, }\DecValTok{20}\NormalTok{, }\DecValTok{10}\NormalTok{, }\DecValTok{5}\NormalTok{, }\DecValTok{2}\NormalTok{, }\DecValTok{1}\NormalTok{]}
+
+
+\KeywordTok{def}\NormalTok{ renduMonnaie(s):}
+    \CommentTok{"""In : un entier s}
+\CommentTok{    Out: liste des pièces à rendre de somme s"""}
+\NormalTok{    L }\OperatorTok{=}\NormalTok{ []}
+\NormalTok{    i }\OperatorTok{=} \DecValTok{0}
+    \ControlFlowTok{while}\NormalTok{ s }\OperatorTok{\textgreater{}} \DecValTok{0}\NormalTok{:}
+        \ControlFlowTok{if}\NormalTok{ valeurs[i] }\OperatorTok{\textless{}=}\NormalTok{ s:}
+\NormalTok{            ...}
+\NormalTok{            ...}
+        \ControlFlowTok{else}\NormalTok{:}
+\NormalTok{            ...}
+    \ControlFlowTok{return}\NormalTok{ L}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Jeu de tests}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# encore un test}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Test de la fonction précédente}
+\CommentTok{\# me permet de voir que votre fonction à l\textquotesingle{}air correcte, c\textquotesingle{}est le cas si cette cellule ne renvoie pas d\textquotesingle{}erreur}
+\NormalTok{valeurs }\OperatorTok{=}\NormalTok{ [}\DecValTok{200}\NormalTok{, }\DecValTok{100}\NormalTok{, }\DecValTok{50}\NormalTok{, }\DecValTok{20}\NormalTok{, }\DecValTok{10}\NormalTok{, }\DecValTok{5}\NormalTok{, }\DecValTok{2}\NormalTok{, }\DecValTok{1}\NormalTok{]}
+\ControlFlowTok{assert}\NormalTok{ [renduMonnaie(s) }\ControlFlowTok{for}\NormalTok{ s }\KeywordTok{in} \BuiltInTok{range}\NormalTok{(}\DecValTok{100}\NormalTok{)] }\OperatorTok{==}\NormalTok{ [}
+\NormalTok{    [],}
+\NormalTok{    [}\DecValTok{1}\NormalTok{],}
+\NormalTok{    [}\DecValTok{2}\NormalTok{],}
+\NormalTok{    [}\DecValTok{2}\NormalTok{, }\DecValTok{1}\NormalTok{],}
+\NormalTok{    [}\DecValTok{2}\NormalTok{, }\DecValTok{2}\NormalTok{],}
+\NormalTok{    [}\DecValTok{5}\NormalTok{],}
+\NormalTok{    [}\DecValTok{5}\NormalTok{, }\DecValTok{1}\NormalTok{],}
+\NormalTok{    [}\DecValTok{5}\NormalTok{, }\DecValTok{2}\NormalTok{],}
+\NormalTok{    [}\DecValTok{5}\NormalTok{, }\DecValTok{2}\NormalTok{, }\DecValTok{1}\NormalTok{],}
+\NormalTok{    [}\DecValTok{5}\NormalTok{, }\DecValTok{2}\NormalTok{, }\DecValTok{2}\NormalTok{],}
+\NormalTok{    [}\DecValTok{10}\NormalTok{],}
+\NormalTok{    [}\DecValTok{10}\NormalTok{, }\DecValTok{1}\NormalTok{],}
+\NormalTok{    [}\DecValTok{10}\NormalTok{, }\DecValTok{2}\NormalTok{],}
+\NormalTok{    [}\DecValTok{10}\NormalTok{, }\DecValTok{2}\NormalTok{, }\DecValTok{1}\NormalTok{],}
+\NormalTok{    [}\DecValTok{10}\NormalTok{, }\DecValTok{2}\NormalTok{, }\DecValTok{2}\NormalTok{],}
+\NormalTok{    [}\DecValTok{10}\NormalTok{, }\DecValTok{5}\NormalTok{],}
+\NormalTok{    [}\DecValTok{10}\NormalTok{, }\DecValTok{5}\NormalTok{, }\DecValTok{1}\NormalTok{],}
+\NormalTok{    [}\DecValTok{10}\NormalTok{, }\DecValTok{5}\NormalTok{, }\DecValTok{2}\NormalTok{],}
+\NormalTok{    [}\DecValTok{10}\NormalTok{, }\DecValTok{5}\NormalTok{, }\DecValTok{2}\NormalTok{, }\DecValTok{1}\NormalTok{],}
+\NormalTok{    [}\DecValTok{10}\NormalTok{, }\DecValTok{5}\NormalTok{, }\DecValTok{2}\NormalTok{, }\DecValTok{2}\NormalTok{],}
+\NormalTok{    [}\DecValTok{20}\NormalTok{],}
+\NormalTok{    [}\DecValTok{20}\NormalTok{, }\DecValTok{1}\NormalTok{],}
+\NormalTok{    [}\DecValTok{20}\NormalTok{, }\DecValTok{2}\NormalTok{],}
+\NormalTok{    [}\DecValTok{20}\NormalTok{, }\DecValTok{2}\NormalTok{, }\DecValTok{1}\NormalTok{],}
+\NormalTok{    [}\DecValTok{20}\NormalTok{, }\DecValTok{2}\NormalTok{, }\DecValTok{2}\NormalTok{],}
+\NormalTok{    [}\DecValTok{20}\NormalTok{, }\DecValTok{5}\NormalTok{],}
+\NormalTok{    [}\DecValTok{20}\NormalTok{, }\DecValTok{5}\NormalTok{, }\DecValTok{1}\NormalTok{],}
+\NormalTok{    [}\DecValTok{20}\NormalTok{, }\DecValTok{5}\NormalTok{, }\DecValTok{2}\NormalTok{],}
+\NormalTok{    [}\DecValTok{20}\NormalTok{, }\DecValTok{5}\NormalTok{, }\DecValTok{2}\NormalTok{, }\DecValTok{1}\NormalTok{],}
+\NormalTok{    [}\DecValTok{20}\NormalTok{, }\DecValTok{5}\NormalTok{, }\DecValTok{2}\NormalTok{, }\DecValTok{2}\NormalTok{],}
+\NormalTok{    [}\DecValTok{20}\NormalTok{, }\DecValTok{10}\NormalTok{],}
+\NormalTok{    [}\DecValTok{20}\NormalTok{, }\DecValTok{10}\NormalTok{, }\DecValTok{1}\NormalTok{],}
+\NormalTok{    [}\DecValTok{20}\NormalTok{, }\DecValTok{10}\NormalTok{, }\DecValTok{2}\NormalTok{],}
+\NormalTok{    [}\DecValTok{20}\NormalTok{, }\DecValTok{10}\NormalTok{, }\DecValTok{2}\NormalTok{, }\DecValTok{1}\NormalTok{],}
+\NormalTok{    [}\DecValTok{20}\NormalTok{, }\DecValTok{10}\NormalTok{, }\DecValTok{2}\NormalTok{, }\DecValTok{2}\NormalTok{],}
+\NormalTok{    [}\DecValTok{20}\NormalTok{, }\DecValTok{10}\NormalTok{, }\DecValTok{5}\NormalTok{],}
+\NormalTok{    [}\DecValTok{20}\NormalTok{, }\DecValTok{10}\NormalTok{, }\DecValTok{5}\NormalTok{, }\DecValTok{1}\NormalTok{],}
+\NormalTok{    [}\DecValTok{20}\NormalTok{, }\DecValTok{10}\NormalTok{, }\DecValTok{5}\NormalTok{, }\DecValTok{2}\NormalTok{],}
+\NormalTok{    [}\DecValTok{20}\NormalTok{, }\DecValTok{10}\NormalTok{, }\DecValTok{5}\NormalTok{, }\DecValTok{2}\NormalTok{, }\DecValTok{1}\NormalTok{],}
+\NormalTok{    [}\DecValTok{20}\NormalTok{, }\DecValTok{10}\NormalTok{, }\DecValTok{5}\NormalTok{, }\DecValTok{2}\NormalTok{, }\DecValTok{2}\NormalTok{],}
+\NormalTok{    [}\DecValTok{20}\NormalTok{, }\DecValTok{20}\NormalTok{],}
+\NormalTok{    [}\DecValTok{20}\NormalTok{, }\DecValTok{20}\NormalTok{, }\DecValTok{1}\NormalTok{],}
+\NormalTok{    [}\DecValTok{20}\NormalTok{, }\DecValTok{20}\NormalTok{, }\DecValTok{2}\NormalTok{],}
+\NormalTok{    [}\DecValTok{20}\NormalTok{, }\DecValTok{20}\NormalTok{, }\DecValTok{2}\NormalTok{, }\DecValTok{1}\NormalTok{],}
+\NormalTok{    [}\DecValTok{20}\NormalTok{, }\DecValTok{20}\NormalTok{, }\DecValTok{2}\NormalTok{, }\DecValTok{2}\NormalTok{],}
+\NormalTok{    [}\DecValTok{20}\NormalTok{, }\DecValTok{20}\NormalTok{, }\DecValTok{5}\NormalTok{],}
+\NormalTok{    [}\DecValTok{20}\NormalTok{, }\DecValTok{20}\NormalTok{, }\DecValTok{5}\NormalTok{, }\DecValTok{1}\NormalTok{],}
+\NormalTok{    [}\DecValTok{20}\NormalTok{, }\DecValTok{20}\NormalTok{, }\DecValTok{5}\NormalTok{, }\DecValTok{2}\NormalTok{],}
+\NormalTok{    [}\DecValTok{20}\NormalTok{, }\DecValTok{20}\NormalTok{, }\DecValTok{5}\NormalTok{, }\DecValTok{2}\NormalTok{, }\DecValTok{1}\NormalTok{],}
+\NormalTok{    [}\DecValTok{20}\NormalTok{, }\DecValTok{20}\NormalTok{, }\DecValTok{5}\NormalTok{, }\DecValTok{2}\NormalTok{, }\DecValTok{2}\NormalTok{],}
+\NormalTok{    [}\DecValTok{50}\NormalTok{],}
+\NormalTok{    [}\DecValTok{50}\NormalTok{, }\DecValTok{1}\NormalTok{],}
+\NormalTok{    [}\DecValTok{50}\NormalTok{, }\DecValTok{2}\NormalTok{],}
+\NormalTok{    [}\DecValTok{50}\NormalTok{, }\DecValTok{2}\NormalTok{, }\DecValTok{1}\NormalTok{],}
+\NormalTok{    [}\DecValTok{50}\NormalTok{, }\DecValTok{2}\NormalTok{, }\DecValTok{2}\NormalTok{],}
+\NormalTok{    [}\DecValTok{50}\NormalTok{, }\DecValTok{5}\NormalTok{],}
+\NormalTok{    [}\DecValTok{50}\NormalTok{, }\DecValTok{5}\NormalTok{, }\DecValTok{1}\NormalTok{],}
+\NormalTok{    [}\DecValTok{50}\NormalTok{, }\DecValTok{5}\NormalTok{, }\DecValTok{2}\NormalTok{],}
+\NormalTok{    [}\DecValTok{50}\NormalTok{, }\DecValTok{5}\NormalTok{, }\DecValTok{2}\NormalTok{, }\DecValTok{1}\NormalTok{],}
+\NormalTok{    [}\DecValTok{50}\NormalTok{, }\DecValTok{5}\NormalTok{, }\DecValTok{2}\NormalTok{, }\DecValTok{2}\NormalTok{],}
+\NormalTok{    [}\DecValTok{50}\NormalTok{, }\DecValTok{10}\NormalTok{],}
+\NormalTok{    [}\DecValTok{50}\NormalTok{, }\DecValTok{10}\NormalTok{, }\DecValTok{1}\NormalTok{],}
+\NormalTok{    [}\DecValTok{50}\NormalTok{, }\DecValTok{10}\NormalTok{, }\DecValTok{2}\NormalTok{],}
+\NormalTok{    [}\DecValTok{50}\NormalTok{, }\DecValTok{10}\NormalTok{, }\DecValTok{2}\NormalTok{, }\DecValTok{1}\NormalTok{],}
+\NormalTok{    [}\DecValTok{50}\NormalTok{, }\DecValTok{10}\NormalTok{, }\DecValTok{2}\NormalTok{, }\DecValTok{2}\NormalTok{],}
+\NormalTok{    [}\DecValTok{50}\NormalTok{, }\DecValTok{10}\NormalTok{, }\DecValTok{5}\NormalTok{],}
+\NormalTok{    [}\DecValTok{50}\NormalTok{, }\DecValTok{10}\NormalTok{, }\DecValTok{5}\NormalTok{, }\DecValTok{1}\NormalTok{],}
+\NormalTok{    [}\DecValTok{50}\NormalTok{, }\DecValTok{10}\NormalTok{, }\DecValTok{5}\NormalTok{, }\DecValTok{2}\NormalTok{],}
+\NormalTok{    [}\DecValTok{50}\NormalTok{, }\DecValTok{10}\NormalTok{, }\DecValTok{5}\NormalTok{, }\DecValTok{2}\NormalTok{, }\DecValTok{1}\NormalTok{],}
+\NormalTok{    [}\DecValTok{50}\NormalTok{, }\DecValTok{10}\NormalTok{, }\DecValTok{5}\NormalTok{, }\DecValTok{2}\NormalTok{, }\DecValTok{2}\NormalTok{],}
+\NormalTok{    [}\DecValTok{50}\NormalTok{, }\DecValTok{20}\NormalTok{],}
+\NormalTok{    [}\DecValTok{50}\NormalTok{, }\DecValTok{20}\NormalTok{, }\DecValTok{1}\NormalTok{],}
+\NormalTok{    [}\DecValTok{50}\NormalTok{, }\DecValTok{20}\NormalTok{, }\DecValTok{2}\NormalTok{],}
+\NormalTok{    [}\DecValTok{50}\NormalTok{, }\DecValTok{20}\NormalTok{, }\DecValTok{2}\NormalTok{, }\DecValTok{1}\NormalTok{],}
+\NormalTok{    [}\DecValTok{50}\NormalTok{, }\DecValTok{20}\NormalTok{, }\DecValTok{2}\NormalTok{, }\DecValTok{2}\NormalTok{],}
+\NormalTok{    [}\DecValTok{50}\NormalTok{, }\DecValTok{20}\NormalTok{, }\DecValTok{5}\NormalTok{],}
+\NormalTok{    [}\DecValTok{50}\NormalTok{, }\DecValTok{20}\NormalTok{, }\DecValTok{5}\NormalTok{, }\DecValTok{1}\NormalTok{],}
+\NormalTok{    [}\DecValTok{50}\NormalTok{, }\DecValTok{20}\NormalTok{, }\DecValTok{5}\NormalTok{, }\DecValTok{2}\NormalTok{],}
+\NormalTok{    [}\DecValTok{50}\NormalTok{, }\DecValTok{20}\NormalTok{, }\DecValTok{5}\NormalTok{, }\DecValTok{2}\NormalTok{, }\DecValTok{1}\NormalTok{],}
+\NormalTok{    [}\DecValTok{50}\NormalTok{, }\DecValTok{20}\NormalTok{, }\DecValTok{5}\NormalTok{, }\DecValTok{2}\NormalTok{, }\DecValTok{2}\NormalTok{],}
+\NormalTok{    [}\DecValTok{50}\NormalTok{, }\DecValTok{20}\NormalTok{, }\DecValTok{10}\NormalTok{],}
+\NormalTok{    [}\DecValTok{50}\NormalTok{, }\DecValTok{20}\NormalTok{, }\DecValTok{10}\NormalTok{, }\DecValTok{1}\NormalTok{],}
+\NormalTok{    [}\DecValTok{50}\NormalTok{, }\DecValTok{20}\NormalTok{, }\DecValTok{10}\NormalTok{, }\DecValTok{2}\NormalTok{],}
+\NormalTok{    [}\DecValTok{50}\NormalTok{, }\DecValTok{20}\NormalTok{, }\DecValTok{10}\NormalTok{, }\DecValTok{2}\NormalTok{, }\DecValTok{1}\NormalTok{],}
+\NormalTok{    [}\DecValTok{50}\NormalTok{, }\DecValTok{20}\NormalTok{, }\DecValTok{10}\NormalTok{, }\DecValTok{2}\NormalTok{, }\DecValTok{2}\NormalTok{],}
+\NormalTok{    [}\DecValTok{50}\NormalTok{, }\DecValTok{20}\NormalTok{, }\DecValTok{10}\NormalTok{, }\DecValTok{5}\NormalTok{],}
+\NormalTok{    [}\DecValTok{50}\NormalTok{, }\DecValTok{20}\NormalTok{, }\DecValTok{10}\NormalTok{, }\DecValTok{5}\NormalTok{, }\DecValTok{1}\NormalTok{],}
+\NormalTok{    [}\DecValTok{50}\NormalTok{, }\DecValTok{20}\NormalTok{, }\DecValTok{10}\NormalTok{, }\DecValTok{5}\NormalTok{, }\DecValTok{2}\NormalTok{],}
+\NormalTok{    [}\DecValTok{50}\NormalTok{, }\DecValTok{20}\NormalTok{, }\DecValTok{10}\NormalTok{, }\DecValTok{5}\NormalTok{, }\DecValTok{2}\NormalTok{, }\DecValTok{1}\NormalTok{],}
+\NormalTok{    [}\DecValTok{50}\NormalTok{, }\DecValTok{20}\NormalTok{, }\DecValTok{10}\NormalTok{, }\DecValTok{5}\NormalTok{, }\DecValTok{2}\NormalTok{, }\DecValTok{2}\NormalTok{],}
+\NormalTok{    [}\DecValTok{50}\NormalTok{, }\DecValTok{20}\NormalTok{, }\DecValTok{20}\NormalTok{],}
+\NormalTok{    [}\DecValTok{50}\NormalTok{, }\DecValTok{20}\NormalTok{, }\DecValTok{20}\NormalTok{, }\DecValTok{1}\NormalTok{],}
+\NormalTok{    [}\DecValTok{50}\NormalTok{, }\DecValTok{20}\NormalTok{, }\DecValTok{20}\NormalTok{, }\DecValTok{2}\NormalTok{],}
+\NormalTok{    [}\DecValTok{50}\NormalTok{, }\DecValTok{20}\NormalTok{, }\DecValTok{20}\NormalTok{, }\DecValTok{2}\NormalTok{, }\DecValTok{1}\NormalTok{],}
+\NormalTok{    [}\DecValTok{50}\NormalTok{, }\DecValTok{20}\NormalTok{, }\DecValTok{20}\NormalTok{, }\DecValTok{2}\NormalTok{, }\DecValTok{2}\NormalTok{],}
+\NormalTok{    [}\DecValTok{50}\NormalTok{, }\DecValTok{20}\NormalTok{, }\DecValTok{20}\NormalTok{, }\DecValTok{5}\NormalTok{],}
+\NormalTok{    [}\DecValTok{50}\NormalTok{, }\DecValTok{20}\NormalTok{, }\DecValTok{20}\NormalTok{, }\DecValTok{5}\NormalTok{, }\DecValTok{1}\NormalTok{],}
+\NormalTok{    [}\DecValTok{50}\NormalTok{, }\DecValTok{20}\NormalTok{, }\DecValTok{20}\NormalTok{, }\DecValTok{5}\NormalTok{, }\DecValTok{2}\NormalTok{],}
+\NormalTok{    [}\DecValTok{50}\NormalTok{, }\DecValTok{20}\NormalTok{, }\DecValTok{20}\NormalTok{, }\DecValTok{5}\NormalTok{, }\DecValTok{2}\NormalTok{, }\DecValTok{1}\NormalTok{],}
+\NormalTok{    [}\DecValTok{50}\NormalTok{, }\DecValTok{20}\NormalTok{, }\DecValTok{20}\NormalTok{, }\DecValTok{5}\NormalTok{, }\DecValTok{2}\NormalTok{, }\DecValTok{2}\NormalTok{],}
+\NormalTok{]}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{question-2}{%
+\subsubsection{Question 2}\label{question-2}}
+
+Tester l\textquotesingle algorithme glouton précédent sur le système
+monétaire \texttt{valeurs={[}10,6,1{]}} pour rendre une somme égale à
+12.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Jeu de test}
+\end{Highlighting}
+\end{Shaded}
+
+Est-ce la solution optimale ? Que peut-on en déduire ?
+
+\hypertarget{2--le-probluxe8me-du-sac-uxe0-dos}{%
+\section{2- Le problème du sac à
+dos}\label{2--le-probluxe8me-du-sac-uxe0-dos}}
+
+Le problème du sac à dos, noté également KP (en anglais, Knapsack
+Problem) est un problème d\textquotesingle optimisation combinatoire. On
+dispose d'un sac à dos pouvant supporter un poids maximal donné et de
+divers objets ayant chacun une valeur et un poids. Il s'agit de choisir
+les objets à emporter dans le sac afin d'obtenir la valeur totale la
+plus grande tout en respectant la contrainte du poids maximal.
+
+Arsène Lupin a devant lui 7 objets dont les valeurs et masses sont
+indiquées dans le tableau ci-dessous. Il dispose d'un sac à dos de
+capacité maximale 10 kg. Il souhaite emporter dans son sac à dos les
+objets dont la valeurs est la plus grande possible tout en ne dépassant
+pas la capacité maximale du sac à dos. \includegraphics{image.png}
+
+\hypertarget{structure-de-donnuxe9es-adaptuxe9e-au-probluxe8me-du-sac-uxe0-dos}{%
+\subsection{Structure de données adaptée au problème du sac à
+dos}\label{structure-de-donnuxe9es-adaptuxe9e-au-probluxe8me-du-sac-uxe0-dos}}
+
+On peut donner une liste de noms, de valeurs et de masses. Ces trois
+variables resteront inchangées donc on pourra là aussi les considérer
+comme variables globales (elles seront utilisées dans les fonctions mais
+n'apparaitrons pas dans les arguments des fonctions).
+
+\hypertarget{question-3}{%
+\subsubsection{Question 3}\label{question-3}}
+
+Exécuter la cellule suivante pour utiliser les variables globales
+\texttt{noms}, \texttt{valeurs} et \texttt{masses} qui serviront pour
+toute la suite.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{noms }\OperatorTok{=}\NormalTok{ [}\StringTok{"A"}\NormalTok{, }\StringTok{"B"}\NormalTok{, }\StringTok{"C"}\NormalTok{, }\StringTok{"D"}\NormalTok{, }\StringTok{"E"}\NormalTok{, }\StringTok{"F"}\NormalTok{, }\StringTok{"G"}\NormalTok{]}
+\NormalTok{valeurs }\OperatorTok{=}\NormalTok{ [}\DecValTok{10}\NormalTok{, }\DecValTok{11}\NormalTok{, }\DecValTok{23}\NormalTok{, }\DecValTok{9}\NormalTok{, }\DecValTok{30}\NormalTok{, }\DecValTok{6}\NormalTok{, }\DecValTok{8}\NormalTok{]}
+\NormalTok{masses }\OperatorTok{=}\NormalTok{ [}\DecValTok{2}\NormalTok{, }\FloatTok{4.5}\NormalTok{, }\DecValTok{5}\NormalTok{, }\DecValTok{4}\NormalTok{, }\DecValTok{9}\NormalTok{, }\DecValTok{1}\NormalTok{, }\FloatTok{2.5}\NormalTok{]}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{question-4}{%
+\subsubsection{Question 4}\label{question-4}}
+
+Compléter la fonction ci-dessous qui prend comme arguments une liste de
+noms d'objets, et renvoie la valeur de ces objets. Elle devra renvoyer
+-1 si jamais la masse dépasse la masse maximale. On vérifiera cette
+fonction avec les résultats des trois premières questions de l'exercice
+4 du cours (questions 1, 2 et 3).
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{def}\NormalTok{ valeur(objets, masseMax):}
+    \CommentTok{"""In : une liste d\textquotesingle{}objets et un entier masseMax}
+\CommentTok{    Out: valeur totale des objets de la liste objets}
+\CommentTok{         si la masse des objets ne dépasse pas masseMax}
+\CommentTok{         {-}1 sinon"""}
+\NormalTok{    valeur }\OperatorTok{=} \DecValTok{0}
+\NormalTok{    masse }\OperatorTok{=} \DecValTok{0}
+    \ControlFlowTok{for}\NormalTok{ x }\KeywordTok{in}\NormalTok{ objets:}
+\NormalTok{        i }\OperatorTok{=}\NormalTok{ noms.index(x)  }\CommentTok{\# indice de l\textquotesingle{}objet x}
+\NormalTok{        valeur }\OperatorTok{=}\NormalTok{ ...}
+\NormalTok{        masse }\OperatorTok{=}\NormalTok{ ...}
+    \ControlFlowTok{if}\NormalTok{ masse }\OperatorTok{\textless{}=}\NormalTok{ masseMax:}
+        \ControlFlowTok{return}\NormalTok{ ...}
+    \ControlFlowTok{else}\NormalTok{:}
+        \ControlFlowTok{return}\NormalTok{ ...}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Jeu de tests (question 1 de l\textquotesingle{}ex 4 du cours)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Jeu de tests (question 2 de l\textquotesingle{}ex 4 du cours)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Jeu de tests (question 3 de l\textquotesingle{}ex 4 du cours)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Jeu de tests (question 3 de l\textquotesingle{}ex 4 du cours)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Test de la fonction précédente}
+\CommentTok{\# me permet de voir que votre fonction à l\textquotesingle{}air correcte, c\textquotesingle{}est le cas si cette cellule ne renvoie pas d\textquotesingle{}erreur}
+\NormalTok{noms }\OperatorTok{=}\NormalTok{ [}\StringTok{"A"}\NormalTok{, }\StringTok{"B"}\NormalTok{, }\StringTok{"C"}\NormalTok{, }\StringTok{"D"}\NormalTok{, }\StringTok{"E"}\NormalTok{, }\StringTok{"F"}\NormalTok{, }\StringTok{"G"}\NormalTok{]}
+\NormalTok{valeurs }\OperatorTok{=}\NormalTok{ [}\DecValTok{10}\NormalTok{, }\DecValTok{11}\NormalTok{, }\DecValTok{23}\NormalTok{, }\DecValTok{9}\NormalTok{, }\DecValTok{30}\NormalTok{, }\DecValTok{6}\NormalTok{, }\DecValTok{8}\NormalTok{]}
+\NormalTok{masses }\OperatorTok{=}\NormalTok{ [}\DecValTok{2}\NormalTok{, }\FloatTok{4.5}\NormalTok{, }\DecValTok{5}\NormalTok{, }\DecValTok{4}\NormalTok{, }\DecValTok{9}\NormalTok{, }\DecValTok{1}\NormalTok{, }\FloatTok{2.5}\NormalTok{]}
+\ControlFlowTok{assert}\NormalTok{ valeur([}\StringTok{"A"}\NormalTok{, }\StringTok{"B"}\NormalTok{, }\StringTok{"D"}\NormalTok{], }\DecValTok{10}\NormalTok{) }\OperatorTok{==} \OperatorTok{{-}}\DecValTok{1}
+\ControlFlowTok{assert}\NormalTok{ valeur([}\StringTok{"A"}\NormalTok{, }\StringTok{"D"}\NormalTok{, }\StringTok{"F"}\NormalTok{, }\StringTok{"G"}\NormalTok{], }\DecValTok{10}\NormalTok{) }\OperatorTok{==} \DecValTok{33}
+\ControlFlowTok{assert}\NormalTok{ valeur([}\StringTok{"A"}\NormalTok{, }\StringTok{"C"}\NormalTok{, }\StringTok{"F"}\NormalTok{], }\DecValTok{10}\NormalTok{) }\OperatorTok{==} \DecValTok{39}
+\ControlFlowTok{assert}\NormalTok{ valeur([}\StringTok{"A"}\NormalTok{, }\StringTok{"C"}\NormalTok{, }\StringTok{"G"}\NormalTok{], }\DecValTok{10}\NormalTok{) }\OperatorTok{==} \DecValTok{41}
+\end{Highlighting}
+\end{Shaded}
+
+On choisit la stratégie gloutonne suivante : Tant qu\textquotesingle il
+reste un objet transportable :
+
+\begin{itemize}
+\tightlist
+\item
+  prendre l\textquotesingle objet qui a la plus grande valeur massique
+  \(\mu=\frac{valeur}{masse}\)
+\end{itemize}
+
+Pour appliquer cette stratégie, on va devoir trier par ordre décroissant
+les valeurs massiques. Mais pour ce faire, utilisons une fonction qui
+renvoie la liste des dictionnaires dont les clés sont le nom, la valeur,
+la masse et la valeur massique de chaque objet, triée par valeur
+massique décroissante.
+
+\hypertarget{question-5}{%
+\subsubsection{Question 5}\label{question-5}}
+
+Compléter la fonction ci-dessous puis la tester. Elle doit renvoyer une
+liste triée (par ordre décroissant des valeurs massiques) des objets
+(donnés sous forme de dictionnaires).
+
+On vérifera que cette liste est correctement trièe et que les valeurs
+massiques correspondent au tableau suivant : \includegraphics{image.png}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{def}\NormalTok{ listeDictionnaires():}
+    \CommentTok{"""Out: liste de dictionnaires dont les clés sont}
+\CommentTok{    nom, valeur, masse et valeurMassique"""}
+\NormalTok{    n }\OperatorTok{=} \BuiltInTok{len}\NormalTok{(noms)  }\CommentTok{\# nb d\textquotesingle{}objets}
+\NormalTok{    L }\OperatorTok{=}\NormalTok{ []}
+    \ControlFlowTok{for}\NormalTok{ i }\KeywordTok{in} \BuiltInTok{range}\NormalTok{(n):}
+\NormalTok{        d }\OperatorTok{=} \BuiltInTok{dict}\NormalTok{()}
+\NormalTok{        d[}\StringTok{"nom"}\NormalTok{] }\OperatorTok{=}\NormalTok{ ...}
+\NormalTok{        d[}\StringTok{"valeur"}\NormalTok{] }\OperatorTok{=}\NormalTok{ ...}
+\NormalTok{        d[}\StringTok{"masse"}\NormalTok{] }\OperatorTok{=}\NormalTok{ ...}
+\NormalTok{        d[}\StringTok{"valeurMassique"}\NormalTok{] }\OperatorTok{=}\NormalTok{ ...}
+\NormalTok{        L.append(...)}
+\NormalTok{    L.sort(key}\OperatorTok{=}\KeywordTok{lambda}\NormalTok{ d: ..., reverse}\OperatorTok{=}\VariableTok{True}\NormalTok{)}
+    \ControlFlowTok{return}\NormalTok{ L}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Test}
+\NormalTok{listeDictionnaires()}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Test en donnant chaque objet par ordre décroissant des valeurs massiques:}
+\ControlFlowTok{for}\NormalTok{ d }\KeywordTok{in}\NormalTok{ listeDictionnaires():}
+    \BuiltInTok{print}\NormalTok{(d)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Test de la fonction précédente}
+\CommentTok{\# me permet de voir que votre fonction à l\textquotesingle{}air correcte, c\textquotesingle{}est le cas si cette cellule ne renvoie pas d\textquotesingle{}erreur}
+\NormalTok{noms }\OperatorTok{=}\NormalTok{ [}\StringTok{"A"}\NormalTok{, }\StringTok{"B"}\NormalTok{, }\StringTok{"C"}\NormalTok{, }\StringTok{"D"}\NormalTok{, }\StringTok{"E"}\NormalTok{, }\StringTok{"F"}\NormalTok{, }\StringTok{"G"}\NormalTok{]}
+\NormalTok{valeurs }\OperatorTok{=}\NormalTok{ [}\DecValTok{10}\NormalTok{, }\DecValTok{11}\NormalTok{, }\DecValTok{23}\NormalTok{, }\DecValTok{9}\NormalTok{, }\DecValTok{30}\NormalTok{, }\DecValTok{6}\NormalTok{, }\DecValTok{8}\NormalTok{]}
+\NormalTok{masses }\OperatorTok{=}\NormalTok{ [}\DecValTok{2}\NormalTok{, }\FloatTok{4.5}\NormalTok{, }\DecValTok{5}\NormalTok{, }\DecValTok{4}\NormalTok{, }\DecValTok{9}\NormalTok{, }\DecValTok{1}\NormalTok{, }\FloatTok{2.5}\NormalTok{]}
+\ControlFlowTok{assert}\NormalTok{ listeDictionnaires() }\OperatorTok{==}\NormalTok{ [}
+\NormalTok{    \{}\StringTok{"nom"}\NormalTok{: }\StringTok{"F"}\NormalTok{, }\StringTok{"valeur"}\NormalTok{: }\DecValTok{6}\NormalTok{, }\StringTok{"masse"}\NormalTok{: }\DecValTok{1}\NormalTok{, }\StringTok{"valeurMassique"}\NormalTok{: }\FloatTok{6.0}\NormalTok{\},}
+\NormalTok{    \{}\StringTok{"nom"}\NormalTok{: }\StringTok{"A"}\NormalTok{, }\StringTok{"valeur"}\NormalTok{: }\DecValTok{10}\NormalTok{, }\StringTok{"masse"}\NormalTok{: }\DecValTok{2}\NormalTok{, }\StringTok{"valeurMassique"}\NormalTok{: }\FloatTok{5.0}\NormalTok{\},}
+\NormalTok{    \{}\StringTok{"nom"}\NormalTok{: }\StringTok{"C"}\NormalTok{, }\StringTok{"valeur"}\NormalTok{: }\DecValTok{23}\NormalTok{, }\StringTok{"masse"}\NormalTok{: }\DecValTok{5}\NormalTok{, }\StringTok{"valeurMassique"}\NormalTok{: }\FloatTok{4.6}\NormalTok{\},}
+\NormalTok{    \{}\StringTok{"nom"}\NormalTok{: }\StringTok{"E"}\NormalTok{, }\StringTok{"valeur"}\NormalTok{: }\DecValTok{30}\NormalTok{, }\StringTok{"masse"}\NormalTok{: }\DecValTok{9}\NormalTok{, }\StringTok{"valeurMassique"}\NormalTok{: }\FloatTok{3.3333333333333335}\NormalTok{\},}
+\NormalTok{    \{}\StringTok{"nom"}\NormalTok{: }\StringTok{"G"}\NormalTok{, }\StringTok{"valeur"}\NormalTok{: }\DecValTok{8}\NormalTok{, }\StringTok{"masse"}\NormalTok{: }\FloatTok{2.5}\NormalTok{, }\StringTok{"valeurMassique"}\NormalTok{: }\FloatTok{3.2}\NormalTok{\},}
+\NormalTok{    \{}\StringTok{"nom"}\NormalTok{: }\StringTok{"B"}\NormalTok{, }\StringTok{"valeur"}\NormalTok{: }\DecValTok{11}\NormalTok{, }\StringTok{"masse"}\NormalTok{: }\FloatTok{4.5}\NormalTok{, }\StringTok{"valeurMassique"}\NormalTok{: }\FloatTok{2.4444444444444446}\NormalTok{\},}
+\NormalTok{    \{}\StringTok{"nom"}\NormalTok{: }\StringTok{"D"}\NormalTok{, }\StringTok{"valeur"}\NormalTok{: }\DecValTok{9}\NormalTok{, }\StringTok{"masse"}\NormalTok{: }\DecValTok{4}\NormalTok{, }\StringTok{"valeurMassique"}\NormalTok{: }\FloatTok{2.25}\NormalTok{\},}
+\NormalTok{]}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{question-6}{%
+\subsubsection{Question 6}\label{question-6}}
+
+Compléter la fonction suivante qui renvoie la liste des noms des objets
+à prendre selon l'algorithme glouton. Vérifier cette fonction avec le
+résultat de la question 3 de l'exercice 5.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{def}\NormalTok{ sacAdosGlouton(masseMax):}
+    \CommentTok{"""In : un entier masseMax}
+\CommentTok{    Out: la liste des objets renvoyée par l\textquotesingle{}algo glouton"""}
+\NormalTok{    n }\OperatorTok{=} \BuiltInTok{len}\NormalTok{(masses)  }\CommentTok{\# nb d\textquotesingle{}objets}
+\NormalTok{    L }\OperatorTok{=}\NormalTok{ listeDictionnaires()}
+\NormalTok{    masseDuSac }\OperatorTok{=} \DecValTok{0}
+\NormalTok{    objetsAprendre }\OperatorTok{=}\NormalTok{ []}
+\NormalTok{    i }\OperatorTok{=} \DecValTok{0}
+    \ControlFlowTok{while}\NormalTok{ masseDuSac }\OperatorTok{+}\NormalTok{ L[i][}\StringTok{"masse"}\NormalTok{] }\OperatorTok{\textless{}=}\NormalTok{ masseMax:}
+\NormalTok{        objetsAprendre.append(...)}
+\NormalTok{        masseDuSac }\OperatorTok{=}\NormalTok{ ...}
+\NormalTok{        i }\OperatorTok{=}\NormalTok{ ...}
+    \ControlFlowTok{return}\NormalTok{ objetsAprendre}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Test}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Test qui donne la valeur des objets renvoyée par l’algorithme glouton}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Test de la fonction précédente}
+\CommentTok{\# me permet de voir que votre fonction à l\textquotesingle{}air correcte, c\textquotesingle{}est le cas si cette cellule ne renvoie pas d\textquotesingle{}erreur}
+\NormalTok{noms }\OperatorTok{=}\NormalTok{ [}\StringTok{"A"}\NormalTok{, }\StringTok{"B"}\NormalTok{, }\StringTok{"C"}\NormalTok{, }\StringTok{"D"}\NormalTok{, }\StringTok{"E"}\NormalTok{, }\StringTok{"F"}\NormalTok{, }\StringTok{"G"}\NormalTok{]}
+\NormalTok{valeurs }\OperatorTok{=}\NormalTok{ [}\DecValTok{10}\NormalTok{, }\DecValTok{11}\NormalTok{, }\DecValTok{23}\NormalTok{, }\DecValTok{9}\NormalTok{, }\DecValTok{30}\NormalTok{, }\DecValTok{6}\NormalTok{, }\DecValTok{8}\NormalTok{]}
+\NormalTok{masses }\OperatorTok{=}\NormalTok{ [}\DecValTok{2}\NormalTok{, }\FloatTok{4.5}\NormalTok{, }\DecValTok{5}\NormalTok{, }\DecValTok{4}\NormalTok{, }\DecValTok{9}\NormalTok{, }\DecValTok{1}\NormalTok{, }\FloatTok{2.5}\NormalTok{]}
+\ControlFlowTok{assert}\NormalTok{ [sacAdosGlouton(x) }\ControlFlowTok{for}\NormalTok{ x }\KeywordTok{in} \BuiltInTok{range}\NormalTok{(}\DecValTok{20}\NormalTok{)] }\OperatorTok{==}\NormalTok{ [}
+\NormalTok{    [],}
+\NormalTok{    [}\StringTok{"F"}\NormalTok{],}
+\NormalTok{    [}\StringTok{"F"}\NormalTok{],}
+\NormalTok{    [}\StringTok{"F"}\NormalTok{, }\StringTok{"A"}\NormalTok{],}
+\NormalTok{    [}\StringTok{"F"}\NormalTok{, }\StringTok{"A"}\NormalTok{],}
+\NormalTok{    [}\StringTok{"F"}\NormalTok{, }\StringTok{"A"}\NormalTok{],}
+\NormalTok{    [}\StringTok{"F"}\NormalTok{, }\StringTok{"A"}\NormalTok{],}
+\NormalTok{    [}\StringTok{"F"}\NormalTok{, }\StringTok{"A"}\NormalTok{],}
+\NormalTok{    [}\StringTok{"F"}\NormalTok{, }\StringTok{"A"}\NormalTok{, }\StringTok{"C"}\NormalTok{],}
+\NormalTok{    [}\StringTok{"F"}\NormalTok{, }\StringTok{"A"}\NormalTok{, }\StringTok{"C"}\NormalTok{],}
+\NormalTok{    [}\StringTok{"F"}\NormalTok{, }\StringTok{"A"}\NormalTok{, }\StringTok{"C"}\NormalTok{],}
+\NormalTok{    [}\StringTok{"F"}\NormalTok{, }\StringTok{"A"}\NormalTok{, }\StringTok{"C"}\NormalTok{],}
+\NormalTok{    [}\StringTok{"F"}\NormalTok{, }\StringTok{"A"}\NormalTok{, }\StringTok{"C"}\NormalTok{],}
+\NormalTok{    [}\StringTok{"F"}\NormalTok{, }\StringTok{"A"}\NormalTok{, }\StringTok{"C"}\NormalTok{],}
+\NormalTok{    [}\StringTok{"F"}\NormalTok{, }\StringTok{"A"}\NormalTok{, }\StringTok{"C"}\NormalTok{],}
+\NormalTok{    [}\StringTok{"F"}\NormalTok{, }\StringTok{"A"}\NormalTok{, }\StringTok{"C"}\NormalTok{],}
+\NormalTok{    [}\StringTok{"F"}\NormalTok{, }\StringTok{"A"}\NormalTok{, }\StringTok{"C"}\NormalTok{],}
+\NormalTok{    [}\StringTok{"F"}\NormalTok{, }\StringTok{"A"}\NormalTok{, }\StringTok{"C"}\NormalTok{, }\StringTok{"E"}\NormalTok{],}
+\NormalTok{    [}\StringTok{"F"}\NormalTok{, }\StringTok{"A"}\NormalTok{, }\StringTok{"C"}\NormalTok{, }\StringTok{"E"}\NormalTok{],}
+\NormalTok{    [}\StringTok{"F"}\NormalTok{, }\StringTok{"A"}\NormalTok{, }\StringTok{"C"}\NormalTok{, }\StringTok{"E"}\NormalTok{],}
+\NormalTok{]}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{question-7}{%
+\subsubsection{Question 7}\label{question-7}}
+
+L\textquotesingle algorithme glouton est-il optimal pour le problème du
+sac à dos ?
+
+\hypertarget{question-8}{%
+\subsubsection{Question 8}\label{question-8}}
+
+Utiliser les fonctions précédentes pour savoir ce que renvoie
+l\textquotesingle algorithme glouton si le sac à dos a une capacité
+maximale de 17 kg ?
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Test}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Test qui donne la valeur des objets renvoyée par l’algorithme glouton}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{question-9}{%
+\subsubsection{Question 9}\label{question-9}}
+
+La fonction \texttt{sacAdosForceBrut} ci-dessous teste tous les cas et
+renvoie la liste des objets de valeur maximale (on ne vous demande pas
+de comprendre le code).
+
+On reste avec un sac à dos de capacité maximale 17kg.
+
+Tester la fonction \texttt{sacAdosForceBrut} pour savoir si
+l\textquotesingle algorithme glouton a renvoyé ou non la valeur
+maximale.
+
+Pour info, le module \texttt{itertools} met à disposisition des
+fonctions (ici \texttt{product}) qui permettent de faire en une fois
+plusieurs boucles (ici 7 pour tester tous les cas), cela facilite le
+code (imaginez 7 boucles \texttt{for} imbriquées) mais ne rend pas plus
+rapide l\textquotesingle exécution. Il y a, comme on l\textquotesingle a
+vu \(2^7=128\) tests à effectuer. Donc on évitera de tester cette
+fonction avec 100 objets !
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\ImportTok{from}\NormalTok{ itertools }\ImportTok{import}\NormalTok{ product}
+
+
+\KeywordTok{def}\NormalTok{ listeDobjets(nUpletsDobjets):  }\CommentTok{\# fonction qui sert à sacAdosForceBrut}
+    \CommentTok{"""In : un n uplets de 0 et 1, une liste de noms}
+\CommentTok{    Out: une liste des noms d\textquotesingle{}objets correspondant aux 1"""}
+\NormalTok{    objets }\OperatorTok{=}\NormalTok{ []}
+    \ControlFlowTok{for}\NormalTok{ i }\KeywordTok{in} \BuiltInTok{range}\NormalTok{(}\BuiltInTok{len}\NormalTok{(nUpletsDobjets)):}
+        \ControlFlowTok{if}\NormalTok{ nUpletsDobjets[i] }\OperatorTok{==} \DecValTok{1}\NormalTok{:}
+\NormalTok{            objets.append(noms[i])}
+    \ControlFlowTok{return}\NormalTok{ objets}
+
+
+\KeywordTok{def}\NormalTok{ objetsValide(nUpletsDobjets, masseMax):  }\CommentTok{\# fonction qui sert à sacAdosForceBrut}
+    \CommentTok{"""In : un n uplets de 0 et 1, une liste de masses, un entier masseMax}
+\CommentTok{    Out: vraie si tous les objets associés à 1 peuvent être mis dans le sac"""}
+\NormalTok{    masse }\OperatorTok{=} \DecValTok{0}
+    \ControlFlowTok{for}\NormalTok{ i }\KeywordTok{in} \BuiltInTok{range}\NormalTok{(}\BuiltInTok{len}\NormalTok{(nUpletsDobjets)):}
+        \ControlFlowTok{if}\NormalTok{ nUpletsDobjets[i] }\OperatorTok{==} \DecValTok{1}\NormalTok{:}
+\NormalTok{            masse }\OperatorTok{+=}\NormalTok{ masses[i]}
+    \ControlFlowTok{return}\NormalTok{ masse }\OperatorTok{\textless{}=}\NormalTok{ masseMax}
+
+
+\KeywordTok{def}\NormalTok{ valeurBis(nUpletsDobjets):  }\CommentTok{\# fonction qui sert à sacAdosForceBrut}
+    \CommentTok{"""In : un n uplets de 0 et 1, une liste de valeurs}
+\CommentTok{    Out: la valeur totale des objets asssociés aux 1"""}
+\NormalTok{    val }\OperatorTok{=} \DecValTok{0}
+    \ControlFlowTok{for}\NormalTok{ i }\KeywordTok{in} \BuiltInTok{range}\NormalTok{(}\BuiltInTok{len}\NormalTok{(nUpletsDobjets)):}
+        \ControlFlowTok{if}\NormalTok{ nUpletsDobjets[i] }\OperatorTok{==} \DecValTok{1}\NormalTok{:}
+\NormalTok{            val }\OperatorTok{+=}\NormalTok{ valeurs[i]}
+    \ControlFlowTok{return}\NormalTok{ val}
+
+
+\KeywordTok{def}\NormalTok{ sacAdosForceBrut(masseMax):}
+    \CommentTok{"""In : une liste de masses, une liste de valeurs, un entier masseMax}
+\CommentTok{    Out: la liste des objets de valeur maximale en testant tous les cas"""}
+\NormalTok{    n }\OperatorTok{=} \BuiltInTok{len}\NormalTok{(masses)  }\CommentTok{\# nb d\textquotesingle{}objets}
+\NormalTok{    objets }\OperatorTok{=}\NormalTok{ []}
+\NormalTok{    valeur\_max }\OperatorTok{=} \DecValTok{0}
+    \ControlFlowTok{for}\NormalTok{ p }\KeywordTok{in}\NormalTok{ product(}
+\NormalTok{        [}\DecValTok{0}\NormalTok{, }\DecValTok{1}\NormalTok{], repeat}\OperatorTok{=}\NormalTok{n}
+\NormalTok{    ):  }\CommentTok{\# pour chaque élt p du produit cartésien [0,1]\^{}n}
+        \ControlFlowTok{if}\NormalTok{ objetsValide(p, masseMax):}
+\NormalTok{            val }\OperatorTok{=}\NormalTok{ valeurBis(p)}
+            \ControlFlowTok{if}\NormalTok{ val }\OperatorTok{\textgreater{}}\NormalTok{ valeur\_max:}
+\NormalTok{                valeur\_max }\OperatorTok{=}\NormalTok{ val}
+\NormalTok{                objets }\OperatorTok{=}\NormalTok{ listeDobjets(p)}
+    \ControlFlowTok{return}\NormalTok{ objets}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Jeu de test}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Test qui donne la valeur des objets renvoyée par l’algorithme glouton}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{question-10}{%
+\subsubsection{Question 10}\label{question-10}}
+
+En utilisant les fonctions précédentes, dire si
+l\textquotesingle algorithme glouton renvoie la valeur optimale pour une
+capacité maximale de 40 kg avec les six objets suivants :
+\includegraphics{image.png}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Test de l’algorithme glouton}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Test qui donne la valeur des objets renvoyée par l’algorithme glouton}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Jeu de test de force brute}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Test qui donne la valeur des objets renvoyée par l’algorithme force brute}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{3--le-probluxe8me-du-voyageur-de-commerce}{%
+\section{3- Le problème du voyageur de
+commerce}\label{3--le-probluxe8me-du-voyageur-de-commerce}}
+
+\begin{itemize}
+\tightlist
+\item
+  En informatique, le problème du voyageur de commerce, est un des
+  problèmes d'optimisation les plus connus.
+\item
+  C'est déjà sous forme de jeu que William Rowan Hamilton a posé pour la
+  première fois ce problème, dès 1859.
+\item
+  Sous sa forme la plus classique, son énoncé est le suivant : « Un
+  voyageur de commerce doit visiter une et une seule fois un nombre fini
+  de villes et revenir à son point d'origine. Il s'agit de déterminer
+  l'ordre de visite des villes qui minimise la distance totale parcourue
+  par le voyageur ».
+\item
+  Voici une situation concrète. Nous partons de Nancy et devons nous
+  rendre à Metz, à Paris, à Reims et à Troyes avant de retourner à
+  Nancy. Le tableau des distances routières kilométriques entre ces
+  différentes villes est le suivant : \includegraphics{image.png} Une
+  manière simple d'aborder le problème consiste à énumérer tous les
+  ordres possibles, à calculer pour chacun la distance correspondante,
+  pour sélectionner ensuite la plus petite. C'est ce qu'on appelle la
+  force brute.
+\end{itemize}
+
+\hypertarget{question-11}{%
+\subsubsection{Question 11}\label{question-11}}
+
+Quelle distance correspond au trajet ci-dessous ?
+
+Nancy -\textgreater{} Metz -\textgreater{} Paris -\textgreater{} Reims
+-\textgreater{} Troyes -\textgreater{} Nancy
+
+\hypertarget{question-12}{%
+\subsubsection{Question 12}\label{question-12}}
+
+Proposer un autre trajet et calculer sa distance
+
+\hypertarget{question-13}{%
+\subsubsection{Question 13}\label{question-13}}
+
+\begin{enumerate}
+\tightlist
+\item
+  Donner un trajet qui vous semblerait le plus court et calculer sa
+  distance
+\end{enumerate}
+
+\hypertarget{question-14}{%
+\subsubsection{Question 14}\label{question-14}}
+
+Combien y a-t-il de trajets au total ?
+
+\hypertarget{question-15}{%
+\subsubsection{Question 15}\label{question-15}}
+
+Plus généralement, pour \(n\) villes, combien y aurait-il de trajets à
+examiner ?
+
+\hypertarget{question-16}{%
+\subsubsection{Question 16}\label{question-16}}
+
+On se place dans le cas particulier de \(n=20\) villes. En supposant que
+l'ordinateur mette 0,001 seconde pour examiner un trajet, combien de
+temps faudrait-il attendre pour examiner tous les trajets ?
+
+Appliquons l'approche gloutonne à notre problème du voyageur de
+commerce. Le problème considéré est la visite de l'ensemble des villes,
+depuis une ville de départ déterminée et avec retour à cette ville. Une
+solution est donc n'importe quelle séquence passant par toutes les
+villes intermédiaires demandées, qu'on peut ramener à la succession de
+choix « quelle sera ma prochaine étape ? ».
+
+\hypertarget{principe-de-lalgorithme-glouton-du-voyageur-de-commerce}{%
+\subsubsection{Principe de l\textquotesingle algorithme glouton du
+voyageur de
+commerce}\label{principe-de-lalgorithme-glouton-du-voyageur-de-commerce}}
+
+\hypertarget{question-17}{%
+\subsubsection{Question 17}\label{question-17}}
+
+Compléter :
+
+\begin{itemize}
+\tightlist
+\item
+  Partant de la ville de départ, aller à la ville la plus . . . . . . .
+  ,
+\item
+  Puis aller à la ville la plus . . . . . . . de cette dernière parmi
+  les villes non encore visitées, et ainsi de suite
+\end{itemize}
+
+\hypertarget{question-18}{%
+\subsubsection{Question 18}\label{question-18}}
+
+Quel va être le trajet que va renvoyer cet algorithme glouton et quelle
+est sa distance ? Réponse à détailler par étapes de
+l\textquotesingle algorithme glouton.
+
+\hypertarget{question-19}{%
+\subsubsection{Question 19}\label{question-19}}
+
+\begin{itemize}
+\tightlist
+\item
+  Cette distance que renvoie l'algorithme glouton est-elle optimale ?
+\item
+  Vous parait-elle acceptable ?
+\end{itemize}
+
+\hypertarget{structure-de-donnuxe9es-adaptuxe9e-au-probluxe8me-du-voyageur-de-commerce}{%
+\subsection{Structure de données adaptée au problème du voyageur de
+commerce}\label{structure-de-donnuxe9es-adaptuxe9e-au-probluxe8me-du-voyageur-de-commerce}}
+
+\begin{itemize}
+\tightlist
+\item
+  On commence par numéroter les villes : 0 pour Nancy, 1 pour Metz, 2
+  pour Paris, 3 pour Reims et 4 pour Troyes
+\item
+  On pourra donc créer la liste suivante qui permettra de faire
+  l'association entre le numéro de la ville et la ville :
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{villes}\OperatorTok{=}\NormalTok{[}\StringTok{\textquotesingle{}Nancy\textquotesingle{}}\NormalTok{,}\StringTok{\textquotesingle{}Metz\textquotesingle{}}\NormalTok{,}\StringTok{\textquotesingle{}Paris\textquotesingle{}}\NormalTok{,}\StringTok{\textquotesingle{}Reims\textquotesingle{}}\NormalTok{,}\StringTok{\textquotesingle{}Troyes\textquotesingle{}}\NormalTok{]}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{itemize}
+\tightlist
+\item
+  Ensuite, on stocke les distances entre chaque ville. Pour cela, on
+  peut créer une liste de listes, comme ceci : l'association entre le
+  numéro de la ville et la ville :
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{L}\OperatorTok{=}\NormalTok{[ }
+\NormalTok{    [}\DecValTok{0}\NormalTok{,}\DecValTok{55}\NormalTok{,}\DecValTok{303}\NormalTok{,}\DecValTok{188}\NormalTok{,}\DecValTok{183}\NormalTok{],}
+\NormalTok{    [}\DecValTok{55}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{306}\NormalTok{,}\DecValTok{176}\NormalTok{,}\DecValTok{203}\NormalTok{],}
+\NormalTok{    [}\DecValTok{303}\NormalTok{,}\DecValTok{306}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{142}\NormalTok{,}\DecValTok{153}\NormalTok{],}
+\NormalTok{    [}\DecValTok{188}\NormalTok{,}\DecValTok{176}\NormalTok{,}\DecValTok{142}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{123}\NormalTok{],}
+\NormalTok{    [}\DecValTok{183}\NormalTok{,}\DecValTok{203}\NormalTok{,}\DecValTok{153}\NormalTok{,}\DecValTok{123}\NormalTok{,}\DecValTok{0}\NormalTok{]}
+\NormalTok{]}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{itemize}
+\tightlist
+\item
+  Ainsi, \texttt{L{[}i{]}{[}j{]}} est la distance entre la ville numéro
+  \texttt{i} et la ville numéro \texttt{j}.
+\item
+  Un trajet sera une liste du numéro des villes. Par exemple, le trajet
+  \texttt{{[}0,1,2,3,4,0{]}} correspond au trajet : Nancy
+  -\textgreater{} Metz -\textgreater{} Paris -\textgreater{} Reims
+  -\textgreater{} Troyes -\textgreater{} Nancy
+\end{itemize}
+
+\hypertarget{question-20}{%
+\subsubsection{Question 20}\label{question-20}}
+
+Exécuter la cellule suivante pour pouvoir utiliser les deux variables
+\texttt{villes} et \texttt{L}.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{villes }\OperatorTok{=}\NormalTok{ [}\StringTok{"Nancy"}\NormalTok{, }\StringTok{"Metz"}\NormalTok{, }\StringTok{"Paris"}\NormalTok{, }\StringTok{"Reims"}\NormalTok{, }\StringTok{"Troyes"}\NormalTok{]}
+\NormalTok{L }\OperatorTok{=}\NormalTok{ [}
+\NormalTok{    [}\DecValTok{0}\NormalTok{, }\DecValTok{55}\NormalTok{, }\DecValTok{303}\NormalTok{, }\DecValTok{188}\NormalTok{, }\DecValTok{183}\NormalTok{],}
+\NormalTok{    [}\DecValTok{55}\NormalTok{, }\DecValTok{0}\NormalTok{, }\DecValTok{306}\NormalTok{, }\DecValTok{176}\NormalTok{, }\DecValTok{203}\NormalTok{],}
+\NormalTok{    [}\DecValTok{303}\NormalTok{, }\DecValTok{306}\NormalTok{, }\DecValTok{0}\NormalTok{, }\DecValTok{142}\NormalTok{, }\DecValTok{153}\NormalTok{],}
+\NormalTok{    [}\DecValTok{188}\NormalTok{, }\DecValTok{176}\NormalTok{, }\DecValTok{142}\NormalTok{, }\DecValTok{0}\NormalTok{, }\DecValTok{123}\NormalTok{],}
+\NormalTok{    [}\DecValTok{183}\NormalTok{, }\DecValTok{203}\NormalTok{, }\DecValTok{153}\NormalTok{, }\DecValTok{123}\NormalTok{, }\DecValTok{0}\NormalTok{],}
+\NormalTok{]}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{question-21}{%
+\subsubsection{Question 21}\label{question-21}}
+
+Écrire une fonction \texttt{distanceTrajet} qui prend comme argument une
+liste \texttt{trajet} et qui renvoie la distance totale du trajet. On
+vérifiera cette fonction avec les résultats obtenus par les questions
+11, 12 et 13.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{def}\NormalTok{ distanceTrajet(trajet):}
+    \CommentTok{"""In : une liste trajet}
+\CommentTok{    Out: la distance totale du trajet"""}
+    \ControlFlowTok{pass}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Jeu de test correspondant à la question 11}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Jeu de test correspondant à la question 12}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Jeu de test correspondant à la question 13}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Test de la fonction précédente}
+\CommentTok{\# me permet de voir que votre fonction à l\textquotesingle{}air correcte, c\textquotesingle{}est le cas si cette cellule ne renvoie pas d\textquotesingle{}erreur}
+\NormalTok{villes }\OperatorTok{=}\NormalTok{ [}\StringTok{"Nancy"}\NormalTok{, }\StringTok{"Metz"}\NormalTok{, }\StringTok{"Paris"}\NormalTok{, }\StringTok{"Reims"}\NormalTok{, }\StringTok{"Troyes"}\NormalTok{]}
+\NormalTok{L }\OperatorTok{=}\NormalTok{ [}
+\NormalTok{    [}\DecValTok{0}\NormalTok{, }\DecValTok{55}\NormalTok{, }\DecValTok{303}\NormalTok{, }\DecValTok{188}\NormalTok{, }\DecValTok{183}\NormalTok{],}
+\NormalTok{    [}\DecValTok{55}\NormalTok{, }\DecValTok{0}\NormalTok{, }\DecValTok{306}\NormalTok{, }\DecValTok{176}\NormalTok{, }\DecValTok{203}\NormalTok{],}
+\NormalTok{    [}\DecValTok{303}\NormalTok{, }\DecValTok{306}\NormalTok{, }\DecValTok{0}\NormalTok{, }\DecValTok{142}\NormalTok{, }\DecValTok{153}\NormalTok{],}
+\NormalTok{    [}\DecValTok{188}\NormalTok{, }\DecValTok{176}\NormalTok{, }\DecValTok{142}\NormalTok{, }\DecValTok{0}\NormalTok{, }\DecValTok{123}\NormalTok{],}
+\NormalTok{    [}\DecValTok{183}\NormalTok{, }\DecValTok{203}\NormalTok{, }\DecValTok{153}\NormalTok{, }\DecValTok{123}\NormalTok{, }\DecValTok{0}\NormalTok{],}
+\NormalTok{]}
+\ControlFlowTok{assert}\NormalTok{ distanceTrajet([}\DecValTok{0}\NormalTok{, }\DecValTok{1}\NormalTok{, }\DecValTok{2}\NormalTok{, }\DecValTok{3}\NormalTok{, }\DecValTok{4}\NormalTok{, }\DecValTok{0}\NormalTok{]) }\OperatorTok{==} \DecValTok{809}
+\ControlFlowTok{assert}\NormalTok{ distanceTrajet([}\DecValTok{0}\NormalTok{, }\DecValTok{3}\NormalTok{, }\DecValTok{2}\NormalTok{, }\DecValTok{4}\NormalTok{, }\DecValTok{1}\NormalTok{, }\DecValTok{0}\NormalTok{]) }\OperatorTok{==} \DecValTok{741}
+\ControlFlowTok{assert}\NormalTok{ distanceTrajet([}\DecValTok{0}\NormalTok{, }\DecValTok{4}\NormalTok{, }\DecValTok{2}\NormalTok{, }\DecValTok{3}\NormalTok{, }\DecValTok{1}\NormalTok{, }\DecValTok{0}\NormalTok{]) }\OperatorTok{==} \DecValTok{709}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{question-22}{%
+\subsubsection{Question 22}\label{question-22}}
+
+Compléter la fonction \texttt{afficheDistanceTrajet} qui prend comme
+arguments une liste \texttt{trajet} et qui affiche le trajet ainsi que
+sa distance totale. On vérifiera également cette fonction avec les
+résultats obtenus par les questions 11, 12 et 13.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{def}\NormalTok{ afficheDistanceTrajet(trajet):}
+    \CommentTok{"""In : une liste trajet}
+\CommentTok{    Act: affiche le trajet et sa distance totale"""}
+    \ControlFlowTok{for}\NormalTok{ i }\KeywordTok{in}\NormalTok{ trajet:}
+        \BuiltInTok{print}\NormalTok{(..., }\StringTok{"{-}\textgreater{}"}\NormalTok{, end}\OperatorTok{=}\StringTok{""}\NormalTok{)  }\CommentTok{\# seule ligne à compléter}
+    \BuiltInTok{print}\NormalTok{(distanceTrajet(trajet), }\StringTok{"km"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Jeu de test correspondant à la question 11}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Jeu de test correspondant à la question 12}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Jeu de test correspondant à la question 13}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{question-23}{%
+\subsubsection{Question 23}\label{question-23}}
+
+\begin{itemize}
+\item
+  La fonction \texttt{plusProche} aura pour argument une liste de
+  booléens visitees indiquant pour chaque ville (donnée par son numéro)
+  si elle a déjà été visitée ou non.
+\item
+  Par exemple, la liste
+  \texttt{visitees={[}True,True,False,False,False{]}} signifie que
+  seules les villes numéros 0 et 1 (Nancy et Metz) ont été visitées.
+\item
+  Compléter puis tester la fonction \texttt{plusProche} qui prend comme
+  arguments un numéro ville et une liste de booléens \texttt{visitees}
+  et qui renvoie le numéro de la ville la plus proche de \texttt{ville}
+  parmi celles non encore visitées (on suppose qu'il reste encore des
+  villes à visiter).
+\item
+  Par exemple, \texttt{plusProche(1,{[}True,True,False,False,False{]})}
+  devra renvoyer 3 correspondant à Reims. En effet, Reims est la ville
+  la plus proche de la ville numéro 1 (Metz) parmi les villes non encore
+  visitées.
+\item
+  Pour cela, pour chaque ville non encore visitée, on va calculer la
+  distance à \texttt{ville}, et on mémorisera la distance la plus courte
+  ainsi que la ville la plus proche. Voilà pourquoi, on part d'une
+  distance \texttt{dist\_min} (ici 10000) assez grande qu'on va modifier
+  peu à peu ainsi qu'une villePlusProche qu'on met à -1 mais que l'on
+  modifiera également.
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{def}\NormalTok{ plusProche(ville, visitees):}
+    \CommentTok{"""In : un numéro ville et une liste de booléens visitees}
+\CommentTok{    Out: le numéro de la ville la + proche de ville}
+\CommentTok{         parmi les villes non visitées"""}
+\NormalTok{    dist\_min }\OperatorTok{=} \DecValTok{100000}  \CommentTok{\# on part d\textquotesingle{}une distance\_min très grande}
+\NormalTok{    villePlusProche }\OperatorTok{=} \OperatorTok{{-}}\DecValTok{1}
+    \ControlFlowTok{for}\NormalTok{ i }\KeywordTok{in} \BuiltInTok{range}\NormalTok{(}\BuiltInTok{len}\NormalTok{(visitees)):}
+        \ControlFlowTok{if} \KeywordTok{not}\NormalTok{ ...:}
+\NormalTok{            d }\OperatorTok{=}\NormalTok{ L[...][...]}
+            \ControlFlowTok{if}\NormalTok{ ...:}
+\NormalTok{                ...}
+\NormalTok{                ...}
+    \ControlFlowTok{return}\NormalTok{ villePlusProche}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Jeu de tests}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Jeu de tests}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Test de la fonction précédente}
+\CommentTok{\# me permet de voir que votre fonction à l\textquotesingle{}air correcte, c\textquotesingle{}est le cas si cette cellule ne renvoie pas d\textquotesingle{}erreur}
+\NormalTok{villes }\OperatorTok{=}\NormalTok{ [}\StringTok{"Nancy"}\NormalTok{, }\StringTok{"Metz"}\NormalTok{, }\StringTok{"Paris"}\NormalTok{, }\StringTok{"Reims"}\NormalTok{, }\StringTok{"Troyes"}\NormalTok{]}
+\NormalTok{L }\OperatorTok{=}\NormalTok{ [}
+\NormalTok{    [}\DecValTok{0}\NormalTok{, }\DecValTok{55}\NormalTok{, }\DecValTok{303}\NormalTok{, }\DecValTok{188}\NormalTok{, }\DecValTok{183}\NormalTok{],}
+\NormalTok{    [}\DecValTok{55}\NormalTok{, }\DecValTok{0}\NormalTok{, }\DecValTok{306}\NormalTok{, }\DecValTok{176}\NormalTok{, }\DecValTok{203}\NormalTok{],}
+\NormalTok{    [}\DecValTok{303}\NormalTok{, }\DecValTok{306}\NormalTok{, }\DecValTok{0}\NormalTok{, }\DecValTok{142}\NormalTok{, }\DecValTok{153}\NormalTok{],}
+\NormalTok{    [}\DecValTok{188}\NormalTok{, }\DecValTok{176}\NormalTok{, }\DecValTok{142}\NormalTok{, }\DecValTok{0}\NormalTok{, }\DecValTok{123}\NormalTok{],}
+\NormalTok{    [}\DecValTok{183}\NormalTok{, }\DecValTok{203}\NormalTok{, }\DecValTok{153}\NormalTok{, }\DecValTok{123}\NormalTok{, }\DecValTok{0}\NormalTok{],}
+\NormalTok{]}
+\ControlFlowTok{assert}\NormalTok{ [plusProche(i, [}\VariableTok{True}\NormalTok{, }\VariableTok{True}\NormalTok{, }\VariableTok{False}\NormalTok{, }\VariableTok{False}\NormalTok{, }\VariableTok{False}\NormalTok{]) }\ControlFlowTok{for}\NormalTok{ i }\KeywordTok{in} \BuiltInTok{range}\NormalTok{(}\DecValTok{5}\NormalTok{)] }\OperatorTok{==}\NormalTok{ [}
+    \DecValTok{4}\NormalTok{,}
+    \DecValTok{3}\NormalTok{,}
+    \DecValTok{2}\NormalTok{,}
+    \DecValTok{3}\NormalTok{,}
+    \DecValTok{4}\NormalTok{,}
+\NormalTok{]}
+\ControlFlowTok{assert}\NormalTok{ [plusProche(i, [}\VariableTok{False}\NormalTok{, }\VariableTok{False}\NormalTok{, }\VariableTok{False}\NormalTok{, }\VariableTok{False}\NormalTok{, }\VariableTok{False}\NormalTok{]) }\ControlFlowTok{for}\NormalTok{ i }\KeywordTok{in} \BuiltInTok{range}\NormalTok{(}\DecValTok{5}\NormalTok{)] }\OperatorTok{==}\NormalTok{ [}
+    \DecValTok{0}\NormalTok{,}
+    \DecValTok{1}\NormalTok{,}
+    \DecValTok{2}\NormalTok{,}
+    \DecValTok{3}\NormalTok{,}
+    \DecValTok{4}\NormalTok{,}
+\NormalTok{]}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{question-24}{%
+\subsubsection{Question 24}\label{question-24}}
+
+On arrive enfin à la fonction principale: \texttt{voyageurGlouton}.
+
+Compléter et tester cette fonction qui renvoie le trajet renvoyé par la
+méthode gloutonne.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{def}\NormalTok{ voyageurGlouton():}
+    \CommentTok{"""Out: le trajet renvoyé par l\textquotesingle{}algo glouton"""}
+\NormalTok{    trajet }\OperatorTok{=}\NormalTok{ [}\DecValTok{0}\NormalTok{]}
+\NormalTok{    n }\OperatorTok{=} \BuiltInTok{len}\NormalTok{(L)}
+\NormalTok{    visitees }\OperatorTok{=}\NormalTok{ [}\VariableTok{False} \ControlFlowTok{for}\NormalTok{ i }\KeywordTok{in} \BuiltInTok{range}\NormalTok{(n)]}
+\NormalTok{    ville }\OperatorTok{=} \DecValTok{0}
+    \ControlFlowTok{for}\NormalTok{ i }\KeywordTok{in} \BuiltInTok{range}\NormalTok{(n }\OperatorTok{{-}} \DecValTok{1}\NormalTok{):}
+\NormalTok{        visitees[ville] }\OperatorTok{=}\NormalTok{ ...}
+\NormalTok{        suivante }\OperatorTok{=}\NormalTok{ plusProche(..., ...)}
+\NormalTok{        trajet.append(...)}
+\NormalTok{        ville }\OperatorTok{=}\NormalTok{ ...}
+\NormalTok{    trajet.append(}\DecValTok{0}\NormalTok{)}
+    \ControlFlowTok{return}\NormalTok{ trajet}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Jeu de test}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# affichage du trajet avec la fonction afficheDistanceTrajet}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Test de la fonction précédente}
+\CommentTok{\# me permet de voir que votre fonction à l\textquotesingle{}air correcte, c\textquotesingle{}est le cas si cette cellule ne renvoie pas d\textquotesingle{}erreur}
+\NormalTok{villes }\OperatorTok{=}\NormalTok{ [}\StringTok{"Nancy"}\NormalTok{, }\StringTok{"Metz"}\NormalTok{, }\StringTok{"Paris"}\NormalTok{, }\StringTok{"Reims"}\NormalTok{, }\StringTok{"Troyes"}\NormalTok{]}
+\NormalTok{L }\OperatorTok{=}\NormalTok{ [}
+\NormalTok{    [}\DecValTok{0}\NormalTok{, }\DecValTok{55}\NormalTok{, }\DecValTok{303}\NormalTok{, }\DecValTok{188}\NormalTok{, }\DecValTok{183}\NormalTok{],}
+\NormalTok{    [}\DecValTok{55}\NormalTok{, }\DecValTok{0}\NormalTok{, }\DecValTok{306}\NormalTok{, }\DecValTok{176}\NormalTok{, }\DecValTok{203}\NormalTok{],}
+\NormalTok{    [}\DecValTok{303}\NormalTok{, }\DecValTok{306}\NormalTok{, }\DecValTok{0}\NormalTok{, }\DecValTok{142}\NormalTok{, }\DecValTok{153}\NormalTok{],}
+\NormalTok{    [}\DecValTok{188}\NormalTok{, }\DecValTok{176}\NormalTok{, }\DecValTok{142}\NormalTok{, }\DecValTok{0}\NormalTok{, }\DecValTok{123}\NormalTok{],}
+\NormalTok{    [}\DecValTok{183}\NormalTok{, }\DecValTok{203}\NormalTok{, }\DecValTok{153}\NormalTok{, }\DecValTok{123}\NormalTok{, }\DecValTok{0}\NormalTok{],}
+\NormalTok{]}
+\ControlFlowTok{assert}\NormalTok{ voyageurGlouton() }\OperatorTok{==}\NormalTok{ [}\DecValTok{0}\NormalTok{, }\DecValTok{1}\NormalTok{, }\DecValTok{3}\NormalTok{, }\DecValTok{4}\NormalTok{, }\DecValTok{2}\NormalTok{, }\DecValTok{0}\NormalTok{]}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{lalgorithme-force-brute}{%
+\subsection{L\textquotesingle algorithme force
+brute}\label{lalgorithme-force-brute}}
+
+\begin{itemize}
+\tightlist
+\item
+  Pour obtenir le trajet optimal en analysant toutes les possibilités
+  (ce qui est faisable ici puisqu'il n'y a que 5 villes), il faudrait a
+  priori 4 boucles emboîtées (correspondant aux numéros des 4 villes
+  autres que Nancy) :
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\ControlFlowTok{for}\NormalTok{ i1 }\KeywordTok{in} \BuiltInTok{range}\NormalTok{(}\DecValTok{1}\NormalTok{,}\DecValTok{5}\NormalTok{):}
+    \ControlFlowTok{for}\NormalTok{ i2 }\KeywordTok{in} \BuiltInTok{range}\NormalTok{(}\DecValTok{1}\NormalTok{,}\DecValTok{5}\NormalTok{):}
+        \ControlFlowTok{if}\NormalTok{ i2}\OperatorTok{!=}\NormalTok{i1:}
+            \ControlFlowTok{for}\NormalTok{ i3 }\KeywordTok{in} \BuiltInTok{range}\NormalTok{(}\DecValTok{1}\NormalTok{,}\DecValTok{5}\NormalTok{):}
+                \ControlFlowTok{if}\NormalTok{ i3}\OperatorTok{!=}\NormalTok{i1 }\KeywordTok{and}\NormalTok{ i3}\OperatorTok{!=}\NormalTok{i2:}
+                    \ControlFlowTok{for}\NormalTok{ i4 }\KeywordTok{in} \BuiltInTok{range}\NormalTok{(}\DecValTok{1}\NormalTok{,}\DecValTok{5}\NormalTok{):}
+                        \ControlFlowTok{if}\NormalTok{ i4}\OperatorTok{!=}\NormalTok{i1 }\KeywordTok{and}\NormalTok{ i4}\OperatorTok{!=}\NormalTok{i2 }\KeywordTok{and}\NormalTok{ i4}\OperatorTok{!=}\NormalTok{i3:}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{itemize}
+\tightlist
+\item
+  Les conditions \texttt{if\ i4!=i1\ and\ i4!=i2\ and\ i4!=i3:} sont là
+  pour éviter d'avoir un trajet avec 2 fois la même ville (autre que
+  Nancy).
+\item
+  Plutôt que de faire ces 4 boucles emboîtées, on va utiliser la
+  fonction permutations du module itertools. C'est un module que je vous
+  conseille de retenir si un jour vous avez pleins de boucles emboîtées
+  à faire.
+\item
+  Après avoir importé la fonction \texttt{permutations} du module
+  \texttt{itertools}, les 4 boucles emboîtées peuvent simplement se
+  remplacer par l'instruction :
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\ControlFlowTok{for}\NormalTok{ i1,i2,i3,i4 }\KeywordTok{in}\NormalTok{ permutations([}\DecValTok{1}\NormalTok{,}\DecValTok{2}\NormalTok{,}\DecValTok{3}\NormalTok{,}\DecValTok{4}\NormalTok{]):}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{question-25}{%
+\subsubsection{Question 25}\label{question-25}}
+
+Exécuter la cellule suivante pour tester la boucle et constater
+qu\textquotesingle on obtient toutes les permuations de
+l\textquotesingle ensemble \{1,2,3,4\} qui permettra de tester tous les
+trajets possibles.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\ImportTok{from}\NormalTok{ itertools }\ImportTok{import}\NormalTok{ permutations}
+
+\ControlFlowTok{for}\NormalTok{ i1, i2, i3, i4 }\KeywordTok{in}\NormalTok{ permutations([}\DecValTok{1}\NormalTok{, }\DecValTok{2}\NormalTok{, }\DecValTok{3}\NormalTok{, }\DecValTok{4}\NormalTok{]):}
+    \BuiltInTok{print}\NormalTok{(i1, i2, i3, i4)}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{question-26}{%
+\subsubsection{Question 26}\label{question-26}}
+
+\begin{itemize}
+\item
+  Compléter puis tester la fonction ci-dessous pour qu'elle analyse tous
+  les trajets et renvoie le trajet optimal.
+\item
+  L'idée de cet algorithme est de partir d'un trajet
+  \texttt{trajet\_min} et d'une distance minimale \texttt{dist\_min} et
+  d\textquotesingle examiner toutes les possibilités de trajets en
+  mettant à jour ces deux variables \texttt{trajet\_min} et
+  \texttt{dist\_min} dès qu\textquotesingle on obtient un trajet plus
+  court.
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{def}\NormalTok{ forceBrute():}
+    \CommentTok{"""Out: le trajet de distance minimale"""}
+\NormalTok{    trajet\_min }\OperatorTok{=}\NormalTok{ [}\DecValTok{0}\NormalTok{, }\DecValTok{1}\NormalTok{, }\DecValTok{2}\NormalTok{, }\DecValTok{3}\NormalTok{, }\DecValTok{4}\NormalTok{, }\DecValTok{0}\NormalTok{]}
+\NormalTok{    dist\_min }\OperatorTok{=}\NormalTok{ distanceTrajet(trajet\_min)}
+    \ControlFlowTok{for}\NormalTok{ i1, i2, i3, i4 }\KeywordTok{in}\NormalTok{ permutations([}\DecValTok{1}\NormalTok{, }\DecValTok{2}\NormalTok{, }\DecValTok{3}\NormalTok{, }\DecValTok{4}\NormalTok{]):}
+\NormalTok{        trajet }\OperatorTok{=}\NormalTok{ [}\DecValTok{0}\NormalTok{, i1, i2, i3, i4, }\DecValTok{0}\NormalTok{]}
+\NormalTok{        d }\OperatorTok{=}\NormalTok{ distanceTrajet(trajet)}
+        \ControlFlowTok{if}\NormalTok{ d }\OperatorTok{\textless{}}\NormalTok{ dist\_min:}
+\NormalTok{            dist\_min }\OperatorTok{=}\NormalTok{ ...}
+\NormalTok{            trajet\_min }\OperatorTok{=}\NormalTok{ ...}
+    \ControlFlowTok{return}\NormalTok{ trajet\_min}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Jeu de test}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# affichage du trajet avec la fonction afficheDistanceTrajet}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{question-27}{%
+\subsubsection{Question 27}\label{question-27}}
+
+Quelle est finalement le trajet optimale ?
+
+\hypertarget{question-28}{%
+\subsubsection{Question 28}\label{question-28}}
+
+\begin{itemize}
+\item
+  En cherchant sur le WEB, déterminer les 8 villes françaises les plus
+  peuplées puis déterminer leurs distances entre elles.
+\item
+  Vous partez de Montpellier et vous devez vous rendre dans chacune de
+  ces villes en revenant à Montpellier.
+\item
+  Déterminer le trajet obtenu (et sa distance) par
+  l\textquotesingle algorithme glouton.
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# liste des villes et listes des distances}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# affichage du trajet avec la fonction afficheDistanceTrajet}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{question-29}{%
+\subsubsection{Question 29}\label{question-29}}
+
+Adapater la fonction \texttt{forceBrute} à 8 villes, au lieu de 5 puis
+donner le trajet minimale et le comparer avec celui renvoyé par
+l\textquotesingle algorithme glouton.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{def}\NormalTok{ forceBrute():}
+    \CommentTok{"""Out: le trajet de distance minimale"""}
+    \ControlFlowTok{pass}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# affichage du trajet avec la fonction afficheDistanceTrajet}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+
+\end{Highlighting}
+\end{Shaded}
+
+
+\end{document}
