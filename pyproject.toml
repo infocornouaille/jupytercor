@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "jupytercor"
-version = "0.1.7"
+version = "0.1.8"
 description = "permet de convertir les cellules markdown d'un notebook jupyter avec pandoc"
 authors = ["David Couronné <couronne.david@gmail.com>"]
 license = "MIT"
