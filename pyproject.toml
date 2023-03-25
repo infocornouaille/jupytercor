@@ -1,0 +1,26 @@
+[tool.poetry]
+name = "jupytercor"
+version = "0.1.6"
+description = "permet de convertir les cellules markdown d'un notebook jupyter avec pandoc"
+authors = ["infocornouaille <couronne.david@gmail.com>"]
+license = "MIT"
+readme = "README.md"
+include = ["templates/eisvogel.latex"]
+
+[tool.poetry.dependencies]
+python = "^3.8"
+nbconvert = "^7.2.10"
+pillow = "^9.4.0"
+python-slugify = "^8.0.1"
+markdown = "^3.4.3"
+requests = "^2.28.2"
+panflute = "^2.3.0"
+
+
+[tool.poetry.scripts]
+jupytercor= 'jupytercor.cli:main'
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
