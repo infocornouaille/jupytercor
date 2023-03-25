@@ -21,6 +21,9 @@ panflute = "^2.3.0"
 jupytercor= 'jupytercor.cli:main'
 
 
+[tool.poetry.group.dev.dependencies]
+black = "^23.1.0"
+
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
