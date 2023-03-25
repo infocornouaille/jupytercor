@@ -10,8 +10,7 @@ from pandocfilters import toJSONFilter, RawBlock, RawInline
 
 
 def est_vide_cell(source: List[str]) -> bool:
-    """Determine if a cell is empty or contains only blank lines.
-    """
+    """Determine if a cell is empty or contains only blank lines."""
     for elem in source:
         if elem != "" and elem != "\n":
             return False
