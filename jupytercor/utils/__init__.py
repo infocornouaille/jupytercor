@@ -34,7 +34,10 @@ def clean_markdown(nb: nbformat, templates_path, filters_path) -> nbformat:
         if cell.cell_type == "markdown":
             # pre process the markdown
             cell.source = cell.source.replace("\\$", "xdollarx")
-            # Run a pandoc command to convert markdown to html
+            # Replace the list items with a dash instead of a star
+            if "\n* " in cell.source:
+                cell.source = cell.source.replace("\n* ", "\n\n- ")
+            # Run a pandoc command to convert markdown to html with a custom filter
             html = subprocess.run(
                 [
                     "pandoc",
@@ -56,8 +59,10 @@ def clean_markdown(nb: nbformat, templates_path, filters_path) -> nbformat:
                 raise ValueError(
                     f"Pandoc failed to convert markdown to html with the following error: {html.stderr.decode()}"
                 )
+            
+            
 
-            # Run a pandoc command to convert html to markdown
+            # Run a pandoc command to convert html to markdown with a custom filter
             result = subprocess.run(
                 ["pandoc", "-f", "html", "-t", "gfm-raw_html", "-o", "-"],
                 input=html.stdout,
