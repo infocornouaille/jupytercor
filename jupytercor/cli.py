@@ -132,7 +132,9 @@ def main():
 
     if args.clean:
         print("Démarrage du nettoyage...")
-        nb = clean_markdown(nb)
+        templates_path = os.path.join(os.path.dirname(__file__), "templates")
+        filters_path = os.path.join(os.path.dirname(__file__), "filters")
+        nb = clean_markdown(nb, templates_path, filters_path)
         # Write the output notebook file in the same file as the input file if output_file is None or in a different file otherwise
         if args.output_file is None:
             nbformat.write(nb, args.input_file)
