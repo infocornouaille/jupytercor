@@ -1,3 +1,7 @@
+# Examples
+
+## tp-original.ipynb
+
 ```bash
 jupytercor tp-original.ipynb --to pdf
 ```
@@ -44,5 +48,31 @@ jupytercor tp-images.ipynb -o tp-clean.ipynb --clean
 jupytercor tp-clean.ipynb --to pdf
 ```
 
+## structures-original.ipynb
 
+```bash
+jupytercor structures-original.ipynb --to pdf
+```
 
+```bash
+...
+! Unable to load picture or PDF file 'image1.png'.
+<to be read again> 
+...
+```
+
+```bash
+jupytercor structures-original.ipynb -o structures-images.ipynb --images
+```
+
+```bash
+jupytercor structures-images.ipynb --to pdf
+```
+
+```bash
+jupytercor structures-images.ipynb -o structures-clean.ipynb --clean
+```
+
+```bash
+jupytercor structures-clean.ipynb --to pdf
+```
