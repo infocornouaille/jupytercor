@@ -1,23 +1,20 @@
+import base64
 import os
 import re
 import shutil
-import base64
-from PIL import Image
 
 import markdown
-from markdown.treeprocessors import Treeprocessor
-from markdown.extensions import Extension
 import requests
+from markdown.extensions import Extension
+from markdown.treeprocessors import Treeprocessor
+from PIL import Image
 from slugify import slugify
 
 from jupytercor.extract64 import *
-
-
 from jupytercor.utils import *
 
 # Expression régulière pour remplacer les liens vers les images
 pattern_https = r"\((https?://.+)\)"
-# pattern64 = r"!\[.*?\]\(data:image\/.*?;base64,[a-zA-Z0-9+/=]+\)"
 pattern64 = r"!\[.*?\]\(data:image\/.*?;base64,.+?\)"
 regex_64 = re.compile("!\[(.*?)\]\((.+?)\)")
 
@@ -43,63 +40,74 @@ class ImgExtension(Extension):
         md.treeprocessors.register(img_ext, "img_ext", 15)
 
 
-def download_image(cell):
-    """Download images from url in markdown cell"""
+def download_image(cell: str) -> None:
+    """Download images from markdown cell and save them in images folder
+
+    Args:
+        cell (str): Markdown cell
+
+    Returns:
+        None
+    """
 
     md = markdown.Markdown(extensions=[ImgExtension()])
-    # Appliquer la méthode convert pour extraire les URL des images dans la liste md.images
+    # Convert markdown cell to extract image urls in md.images
     md.convert(cell)
-    # Parcourir la liste des URL des images et les télécharger avec requests
+    # Iterate over image urls and download them with requests
 
     for url in md.images:
-        # print(url)
-        # print(url)
         if is_valid_url(url):
-            # Récupérer le nom du fichier image à partir de l'URL (après le dernier /)
+            # Get filename from url (after last /)
             filename = url.split("/")[-1]
-            print(f"Téléchargement de {filename}")
-            # Envoyer une requête GET à l'URL et vérifier le statut de la réponse (200 = OK)
+            print(f"Downloading {filename}")
+            # Send a GET request to the url and check the response status (200 = OK)
             response = requests.get(url, stream=True)
             if response.status_code == 200:
-                # Ouvrir un fichier dans le dossier images avec le même nom que l'image
+                # Open a file in images folder with same name as image
                 with open(os.path.join("images", filename), "wb") as f:
-                    # Copier le contenu de la réponse dans le fichier avec shutil
+                    # Copy response content to file with shutil
                     shutil.copyfileobj(response.raw, f)
+            else:
+                print(f"Error downloading image {filename}")
 
 
-# Définir une fonction qui remplace chaque URL par le chemin relatif vers l'image téléchargée
-def replace_url(match):
-    """remplace chaque URL par le chemin relatif vers l'image téléchargée"""
-    # Récupérer l'URL capturée par le groupe 1 de l'expression régulière
+def replace_url(match) -> str:
+    """Replace the URL in the markdown cell with the relative path to the downloaded image
+
+    Args:
+        match (re.Match[str]): match object from re.match()
+
+    Returns:
+        str: relative path to the downloaded image
+    """
+    # Get the URL captured by group 1 of the regular expression
     url = match.group(1)
-    # Récupérer le nom du fichier image à partir de l'URL (après le dernier /)
+    # Get the image filename from the URL (after the last /)
     filename = url.split("/")[-1]
-    # Construire le chemin relatif vers l'image téléchargée dans le dossier images
+    # Build the relative path to the downloaded image in the images folder
     path = os.path.join("images", filename)
-    # Retourner le chemin relatif entre parenthèses à la place de l'URL
+    # Return the relative path between parentheses instead of the URL
     return f"({path})"
 
 
-def test_base64(string):
+def test_base64(string: str) -> str:
+    """Test if string is base64 encoded
+
+    Args:
+        string (str): string to test
+
+        Returns:
+            str: string if not base64 encoded, else base64 decoded string"""
     # Use re.match() to check if the string matches the pattern
     match = re.match(pattern64, string)
     if match:
-        #     pass
-        #     print("Match found:", match.group())
-        # else:
-        #     print("No match found")
-
         match = regex_64.search(string)
         if match:
             nom_fichier = match.group(1)
             name, ext = os.path.splitext(nom_fichier)
-            print(name, ext)
             nom_fichier = slugify(name) + ext
             contenu = match.group(2)
-            # print("Nom du fichier :", nom_fichier)
-            # print("Contenu :", contenu)
             extract_image_64(contenu, nom_fichier)
-
             sortie = string.replace(contenu, f"images/{nom_fichier}")
             return sortie
     return string
@@ -110,17 +118,8 @@ def process_attachemnts(cell, total_images):
         if key in cell.source:
             print(key, "dans la source")
             for cle, valeur in value.items():
-                # print(valeur[:100])
-                # print(type(valeur))
-                width = 100
-                height = 200
-                # png_recovered = base64.b64decode(valeur)
-                # img = Image.fromstr('RGBA', (width, height), valeur)
-                # Decode the base64 data to bytes
-                # imagedata = base64.b64decode(valeur)
                 extract_attachemnt_image(valeur, key, total_images)
                 temp = cell.source
-                truc = "![image.png](attachment:image.png)"
                 temp = temp.replace(
                     f"attachment:{key}", "images/" + str(total_images) + "-" + key
                 )
