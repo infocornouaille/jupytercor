@@ -1,5 +1,6 @@
 import subprocess
 from urllib.parse import urlparse
+import os
 
 import nbformat
 
@@ -19,7 +20,7 @@ def is_valid_url(url: str) -> bool:
         return False
 
 
-def clean_markdown(nb: nbformat) -> nbformat:
+def clean_markdown(nb: nbformat, templates_path, filters_path) -> nbformat:
     """Clean the markdown cells with pandoc conversions
     Read the input notebook and convert all markdown cells into a clean markdown without html tags.
 
@@ -31,10 +32,22 @@ def clean_markdown(nb: nbformat) -> nbformat:
     # Loop through the cells and transform markdown cells with pandoc if clean is True
     for cell in nb.cells:
         if cell.cell_type == "markdown":
+            # pre process the markdown
+            cell.source = cell.source.replace("\\$", "xdollarx")
             # Run a pandoc command to convert markdown to html
             html = subprocess.run(
-                ["pandoc", "-f", "markdown", "-t", "html", "-o", "-"],
-                input=cell.source.encode(),
+                [
+                    "pandoc",
+                    "-f",
+                    "markdown",
+                    "-t",
+                    "html",
+                    "-o",
+                    "-",
+                    "--filter",
+                    os.path.join(filters_path, "panflute-breakline.py"),
+                ],
+                input=cell.source.encode(encoding="utf-8"),
                 capture_output=True,
             )
 
@@ -57,7 +70,13 @@ def clean_markdown(nb: nbformat) -> nbformat:
                     f"Pandoc failed to convert html to markdown with the following error: {result.stderr.decode()}"
                 )
 
+            # post process the markdown
+            result = result.stdout.decode(encoding="utf-8")
+            result = result.replace("\\$", "$")
+            result = result.replace("xdollarx", "\\$")
+
             # Replace the cell source with the transformed text
-            cell.source = result.stdout.decode()
+
+            cell.source = result
 
     return nb
