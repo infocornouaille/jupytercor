@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # coding: utf-8
-""" A pandoc filter that convert blank lines in ldotcarreaux
+"""A pandoc filter that convert blank lines in ldotcarreaux
 Usage:
     pandoc --filter ./ldotcarreaux.py -o myfile.tex myfile.md
 """
