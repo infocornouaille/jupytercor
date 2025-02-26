@@ -1,12 +1,13 @@
 #!/usr/bin/env python
-""" A pandoc filter that has the LaTeX writer use minted for typesetting code.
+"""A pandoc filter that has the LaTeX writer use minted for typesetting code.
 
 Usage:
     pandoc --filter ./minted.py -o myfile.tex myfile.md
 """
 
 from string import Template
-from pandocfilters import toJSONFilter, RawBlock, RawInline
+
+from pandocfilters import RawBlock, RawInline, toJSONFilter
 
 
 def unpack_code(value, language):
