@@ -1,6 +1,6 @@
+import os
 import subprocess
 from urllib.parse import urlparse
-import os
 
 import nbformat
 
@@ -20,7 +20,7 @@ def is_valid_url(url: str) -> bool:
         return False
 
 
-def clean_markdown(nb: nbformat, templates_path, filters_path) -> nbformat:
+def clean_markdown(nb: nbformat) -> nbformat:
     """Clean the markdown cells with pandoc conversions
     Read the input notebook and convert all markdown cells into a clean markdown without html tags.
 
@@ -38,6 +38,7 @@ def clean_markdown(nb: nbformat, templates_path, filters_path) -> nbformat:
             if "\n* " in cell.source:
                 cell.source = cell.source.replace("\n* ", "\n\n- ")
             # Run a pandoc command to convert markdown to html with a custom filter
+
             html = subprocess.run(
                 [
                     "pandoc",
@@ -48,7 +49,7 @@ def clean_markdown(nb: nbformat, templates_path, filters_path) -> nbformat:
                     "-o",
                     "-",
                     "--filter",
-                    os.path.join(filters_path, "panflute-breakline.py"),
+                    "/usr/share/pandoc/data/filters/panflute-breakline.py",
                 ],
                 input=cell.source.encode(encoding="utf-8"),
                 capture_output=True,
@@ -59,8 +60,6 @@ def clean_markdown(nb: nbformat, templates_path, filters_path) -> nbformat:
                 raise ValueError(
                     f"Pandoc failed to convert markdown to html with the following error: {html.stderr.decode()}"
                 )
-            
-            
 
             # Run a pandoc command to convert html to markdown with a custom filter
             result = subprocess.run(
