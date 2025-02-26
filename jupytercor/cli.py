@@ -18,8 +18,13 @@ parser.add_argument("input_file", help="The name of the input notebook file")
 parser.add_argument(
     "-o", "--output_file", help="The name of the output notebook file", default=None
 )
-# Add an toargument with no default value
-parser.add_argument("--to", help="The name of the output format", default=None)
+# Add an toargument with pdf default value
+parser.add_argument("--to", help="The name of the output format", default="pdf")
+
+# Add an templateargument with cornouaille default value
+parser.add_argument(
+    "--template", help="Template: cornouaille or eisvogel", default="cornouaille"
+)
 # Add a clean flag argument with a default value of False
 parser.add_argument(
     "--clean",
@@ -38,7 +43,7 @@ parser.add_argument("--debug", help="Debug mode", action="store_true")
 args = parser.parse_args()
 
 
-def convert_to_latex(input_file: str) -> None:
+def convert_to_latex(input_file: str, template="cornouaille.latex") -> None:
     """Convert a notebook to latex using pandoc
 
     Args:
@@ -49,8 +54,6 @@ def convert_to_latex(input_file: str) -> None:
     """
     name, ext = os.path.splitext(input_file)
     output_tex = name + ".tex"
-    templates_path = os.path.join(os.path.dirname(__file__), "templates")
-    filters_path = os.path.join(os.path.dirname(__file__), "filters")
 
     try:
         tex = subprocess.run(
@@ -63,11 +66,11 @@ def convert_to_latex(input_file: str) -> None:
                 output_tex,
                 "--listing",
                 "--filter",
-                os.path.join(filters_path, "panflute-headers.py"),
+                "/usr/share/pandoc/data/filters/panflute-headers.py",
                 "--filter",
-                os.path.join(filters_path, "pandoc-ldotcarreaux.py"),
+                "/usr/share/pandoc/data/filters/pandoc-ldotcarreaux.py",
                 "--template",
-                os.path.join(templates_path, "cornouaille.latex"),
+                template + ".latex",
             ],
             capture_output=True,
             check=True,
@@ -76,9 +79,11 @@ def convert_to_latex(input_file: str) -> None:
         print("Pandoc not found, please install it.")
     except subprocess.CalledProcessError as e:
         print("Error while running pandoc. Please check your notebook.")
+        print(f"Error while running pandoc: {e.stderr}")
+        print(f"Command exit code: {e.returncode}")
 
 
-def convert_to_pdf(input_file: str) -> None:
+def convert_to_pdf(input_file: str, template="cornouaille") -> None:
     """
     Convert a notebook to pdf using pandoc and xelatex
     Args:
@@ -89,8 +94,17 @@ def convert_to_pdf(input_file: str) -> None:
     name, ext = os.path.splitext(input_file)
     output_tex = name + ".tex"
     output_pdf = name + ".pdf"
-    templates_path = os.path.join(os.path.dirname(__file__), "templates")
-    filters_path = os.path.join(os.path.dirname(__file__), "filters")
+    # Accéder aux ressources du package
+
+    extra = []
+    if "cornouaille" in template:
+        extra = [
+            "--listing",
+            "--filter",
+            "/usr/share/pandoc/data/filters/panflute-headers.py",
+            "--filter",
+            "/usr/share/pandoc/data/filters/pandoc-ldotcarreaux.py",
+        ]
     tex = subprocess.run(
         [
             "pandoc",
@@ -100,8 +114,9 @@ def convert_to_pdf(input_file: str) -> None:
             "-o",
             output_tex,
             "--template",
-            os.path.join(templates_path, "eisvogel.latex"),
-        ],
+            template + ".latex",
+        ]
+        + extra,
         capture_output=True,
     )
     subprocess.run(["xelatex", output_tex])
@@ -114,21 +129,41 @@ def main():
         print("Debug mode")
         print(templates_path)
         return None
-    if args.to:
-        print(f"Conversion vers {args.to}")
+    if args.images:
+        print("Téléchargement d'images éventuelles...")
+        nb = process_images(nb)
+        # Write the output notebook file in the same file as the input file if output_file is None or in a different file otherwise
+        if args.output_file is None:
+            nbformat.write(nb, args.input_file)
+        else:
+            nbformat.write(nb, args.output_file)
+
+        print("Téléchargement d'images effectué avec succès !")
+    elif args.clean:
+        # Read the input notebook file from the input_file argument
+        nb = nbformat.read(args.input_file, as_version=4)
+        print("Démarrage du nettoyage...")
+        templates_path = os.path.join(os.path.dirname(__file__), "templates")
+        filters_path = os.path.join(os.path.dirname(__file__), "filters")
+        nb = clean_markdown(nb)
+        # Write the output notebook file in the same file as the input file if output_file is None or in a different file otherwise
+        if args.output_file is None:
+            nbformat.write(nb, args.input_file)
+        else:
+            nbformat.write(nb, args.output_file)
+        print("Nettoyage effectué avec succès !")
+    elif args.to:
+        print(f"Conversion vers {args.to} avec le template {args.template}")
         if args.to == "pdf":
-            convert_to_pdf(args.input_file)
+            convert_to_pdf(args.input_file, args.template)
         elif args.to == "latex":
-            convert_to_latex(args.input_file)
+            convert_to_latex(args.input_file, args.template)
         else:
             print("Format de sortie non pris en charge")
 
         return None
     print(f"Input file: {args.input_file}")
     print(f"Output file: {args.output_file}")
-
-    # Read the input notebook file from the input_file argument
-    nb = nbformat.read(args.input_file, as_version=4)
 
     if args.clean:
         print("Démarrage du nettoyage...")
