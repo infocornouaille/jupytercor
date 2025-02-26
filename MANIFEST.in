@@ -1,0 +1,3 @@
+include README.md
+recursive-include jupytercor/filters *.py
+recursive-include jupytercor/templates *.latex
