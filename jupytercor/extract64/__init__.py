@@ -1,6 +1,7 @@
 import base64
-from PIL import Image
 from io import BytesIO
+
+from PIL import Image
 
 
 def extract_image_64(base64_string: str, nom_fichier: str) -> None:
