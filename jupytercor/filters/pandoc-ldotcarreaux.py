@@ -67,7 +67,7 @@ def unpack_code(value: Dict, language: str) -> Dict:
         "lines": lines,
         "longueur": len(lines),
         "estvide": is_empty_cell(contents),
-        "message": "truc",
+        "message": "debug_info",
     }
 
 

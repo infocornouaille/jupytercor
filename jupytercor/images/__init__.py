@@ -1,28 +1,31 @@
 import base64
-import os
 import re
 import shutil
+from pathlib import Path
 
 import markdown
 import requests
+from PIL import Image # PIL.Image.open can handle Path objects
 from markdown.extensions import Extension
 from markdown.treeprocessors import Treeprocessor
-from PIL import Image
 from slugify import slugify
 
 from jupytercor.extract64 import extract_image_64, extract_attachemnt_image
 from jupytercor.utils import is_valid_url
 
-# Expression régulière pour remplacer les liens vers les images
+# Define the directory for storing images
+IMAGES_DIR = Path("images")
+
+# Regular expression to replace image links
 pattern_https = r"\((https?://.+)\)"
 pattern64 = r"!\[.*?\]\(data:image\/.*?;base64,.+?\)"
 regex_64 = re.compile("!\[(.*?)\]\((.+?)\)")
 
 
-# Créer une classe qui hérite de Treeprocessor et qui extrait les URL des images
+# A Treeprocessor subclass that extracts image URLs.
 class ImgExtractor(Treeprocessor):
     def __init__(self, md):
-        # Utiliser self.markdown pour stocker l'instance du module markdown passée en paramètre
+        # Store the markdown instance.
         self.markdown = md
 
     def run(self, doc):
@@ -33,7 +36,7 @@ class ImgExtractor(Treeprocessor):
             self.markdown.blocks.append(image)
 
 
-# Créer une classe qui hérite de Extension et qui utilise la classe précédente
+# An Extension subclass that uses the ImgExtractor.
 class ImgExtension(Extension):
     def extendMarkdown(self, md):
         img_ext = ImgExtractor(md)
@@ -63,8 +66,11 @@ def download_image(cell: str) -> None:
             # Send a GET request to the url and check the response status (200 = OK)
             response = requests.get(url, stream=True)
             if response.status_code == 200:
+                # Ensure images directory exists
+                IMAGES_DIR.mkdir(parents=True, exist_ok=True)
                 # Open a file in images folder with same name as image
-                with open(os.path.join("images", filename), "wb") as f:
+                image_path = IMAGES_DIR / filename
+                with image_path.open("wb") as f:
                     # Copy response content to file with shutil
                     shutil.copyfileobj(response.raw, f)
             else:
@@ -85,9 +91,9 @@ def replace_url(match) -> str:
     # Get the image filename from the URL (after the last /)
     filename = url.split("/")[-1]
     # Build the relative path to the downloaded image in the images folder
-    path = os.path.join("images", filename)
+    path = IMAGES_DIR / filename
     # Return the relative path between parentheses instead of the URL
-    return f"({path})"
+    return f"({str(path)})"
 
 
 def test_base64(string: str) -> str:
@@ -103,27 +109,33 @@ def test_base64(string: str) -> str:
     if match:
         match = regex_64.search(string)
         if match:
-            nom_fichier = match.group(1)
-            name, ext = os.path.splitext(nom_fichier)
-            nom_fichier = slugify(name) + ext
+            nom_fichier_orig = match.group(1)
+            original_path = Path(nom_fichier_orig)
+            name = original_path.stem
+            ext = original_path.suffix
+            nom_fichier_slug = slugify(name) + ext
             contenu = match.group(2)
-            extract_image_64(contenu, nom_fichier)
-            sortie = string.replace(contenu, f"images/{nom_fichier}")
+            extract_image_64(contenu, nom_fichier_slug, IMAGES_DIR)
+            sortie = string.replace(contenu, str(IMAGES_DIR / nom_fichier_slug))
             return sortie
     return string
 
 
 def process_attachemnts(cell, total_images):
-    for key, value in cell["attachments"].items():
-        if key in cell.source:
-            print(key, "dans la source")
-            for cle, valeur in value.items():
-                extract_attachemnt_image(valeur, key, total_images)
-                temp = cell.source
-                temp = temp.replace(
-                    f"attachment:{key}", "images/" + str(total_images) + "-" + key
+    for key_filename, value_mimetypes in cell["attachments"].items():
+        if key_filename in cell.source:
+            print(f"Processing attachment: {key_filename} in source")
+            for _mimetype, base64_data in value_mimetypes.items(): # _mimetype (e.g., image/png) is not used for filename
+                # It's better to slugify or sanitize key_filename before using it as a filename part
+                # For now, using original key_filename as per existing logic for file naming.
+                extract_attachemnt_image(base64_data, key_filename, total_images, IMAGES_DIR)
+                temp_source = cell.source
+                # Construct the new path using IMAGES_DIR
+                new_image_path = IMAGES_DIR / f"{total_images}-{key_filename}"
+                temp_source = temp_source.replace(
+                    f"attachment:{key_filename}", str(new_image_path)
                 )
-                cell.source = temp
+                cell.source = temp_source
     del cell["attachments"]
 
     return cell
@@ -136,11 +148,11 @@ def process_images(nb):
         nb 'notebook': original notebook
     """
     total_images = 0
-    # Create images directory if it doesn't exist
+    # Create images directory if it doesn't exist (using Path object)
     try:
-        os.makedirs("images", exist_ok=True)
+        IMAGES_DIR.mkdir(parents=True, exist_ok=True)
     except OSError as e:
-        print(f"Error creating directory 'images': {e}")
+        print(f"Error creating directory '{IMAGES_DIR}': {e}")
         return None # Or handle error as appropriate
 
     # Loop through the cells to process images in markdown cells.
@@ -156,7 +168,7 @@ def process_images(nb):
             cell.source = test_base64(cell.source)
             # Call download_image with string cell.source, not bytes
             download_image(cell.source)
-            # Appliquer la fonction replace_url sur toutes les occurrences du motif dans le texte avec re.sub
+            # Apply the replace_url function to all occurrences of the pattern in the text with re.sub
             result = re.sub(pattern_https, replace_url, cell.source)
             cell.source = result
 

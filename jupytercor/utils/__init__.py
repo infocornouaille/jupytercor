@@ -1,11 +1,12 @@
-import os
 import subprocess
+from pathlib import Path
 from urllib.parse import urlparse
 
 import nbformat
 
 # Define path for filters used within this utility module
-FILTERS_DIR_UTIL = os.path.join(os.path.dirname(__file__), "..", "filters")
+UTIL_DIR = Path(__file__).resolve().parent
+FILTERS_DIR_UTIL = UTIL_DIR.parent / "filters"
 
 
 def is_valid_url(url: str) -> bool:
@@ -52,7 +53,7 @@ def clean_markdown(nb: nbformat) -> nbformat:
                     "-o",
                     "-",
                     "--filter",
-                    os.path.join(FILTERS_DIR_UTIL, "panflute-breakline.py"),
+                    str(FILTERS_DIR_UTIL / "panflute-breakline.py"),
                 ],
                 input=cell.source.encode(encoding="utf-8"),
                 capture_output=True,

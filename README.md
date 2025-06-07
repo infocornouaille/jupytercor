@@ -1,54 +1,66 @@
 # Jupytercor
 
-Jupytercor est un package python qui permet de convertir les cellules markdown d'un notebook jupyter avec pandoc.
+[![PyPI version](https://badge.fury.io/py/jupytercor.svg)](https://badge.fury.io/py/jupytercor)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+<!-- Add other badges here if applicable, e.g., build status, Python versions -->
+<!-- Example: [![Python Versions](https://img.shields.io/pypi/pyversions/jupytercor)](https://pypi.org/project/jupytercor/) -->
+<!-- Example: [![Build Status](https://img.shields.io/github/actions/workflow/status/YOUR_USER/jupytercor/main.yml?branch=main)](https://github.com/YOUR_USER/jupytercor/actions) -->
 
-## Installation et utilisation
+Jupytercor is a Python package that allows converting markdown cells of a Jupyter notebook using Pandoc.
 
-Pour installer jupytercor, vous devez avoir python3 et pandoc installés sur votre machine.
+## Installation and Usage
 
-Vous pouvez ensuite installer jupytercor avec pip:
+To install jupytercor, you need Python 3 and Pandoc installed on your machine. XeLaTeX is also required for PDF conversion.
+
+You can then install jupytercor with pip:
 
 ```bash
 pip install --upgrade jupytercor
 ```
 
-Pour utiliser jupytercor, vous devez exécuter le script jupytercor.py avec la commande suivante:
+To use jupytercor, execute the script with the following command:
 
 ```bash
-jupytercor input.ipynb [-o output.ipynb] [--clean] [--to FORMAT] [--images]
+jupytercor input.ipynb [-o output.ipynb] [--to FORMAT] [--template NAME] [--clean] [--images]
 ```
 
-Où:
+Where:
 
-- `input.ipynb` est le nom du fichier notebook d'entrée à convertir
-- `-o output.ipynb` est une option qui permet de spécifier le nom du fichier notebook de sortie (par défaut c'est output.ipynb)
-- `--to FORMAT` est une option pour préciser le format de sortie. 
-    - `--to latex` pour convertir en LaTeX.
-    - `--to pdf`pour convertir en PDF.
-- `--clean` est une option qui permet d'effectuer les conversions avec pandoc (par défaut c'est False)
-- `--images` est une option qui permet de télécharger les images distantes dans un dossier `images` (par défaut c'est False)
+- `input.ipynb` is the name of the input notebook file to convert.
+- `-o output.ipynb` or `--output-file output.ipynb` is an option to specify the name of the output file. This can be the processed `.ipynb` file or the final converted file (e.g., `mydoc.pdf`).
+- `--to FORMAT` is an option to specify the output format.
+    - `--to latex` to convert to LaTeX.
+    - `--to pdf` to convert to PDF.
+- `--template NAME` is an option to specify the LaTeX template to use (e.g., `cornouaille`, `eisvogel`). Defaults to `cornouaille`.
+- `--clean` is an option to perform markdown cell cleaning with Pandoc (default is False).
+- `--images` is an option to download remote images into an `images` folder and update links (default is False).
 
-## Fonctionnalités et options
+## Features and Options
 
-Jupytercor offre les fonctionnalités et options suivantes:
+Jupytercor offers the following features and options:
 
-- Il lit un fichier notebook au format ipynb et en extrait les cellules markdown
-- Il transforme chaque cellule markdown en html avec pandoc en utilisant l'option `-f markdown -t html`
-- Il transforme chaque cellule html en markdown avec pandoc en utilisant l'option `-f html -t gfm-raw_html`
-- Il remplace le contenu des cellules markdown par le texte transformé
-- Il écrit un nouveau fichier notebook au format ipynb avec les cellules converties
-- Il permet à l'utilisateur de choisir le nom du fichier notebook d'entrée et celui du fichier notebook de sortie
-- Il permet à l'utilisateur d'activer ou non les conversions avec pandoc grâce au drapeau `--clean`
-- Il permet à l'utilisateur de télécharger les images distantes avec une url grâce au drapeau `--images`
+- Reads a notebook file in `.ipynb` format and extracts its markdown cells.
+- Transforms each markdown cell to HTML with Pandoc using the `-f markdown -t html` option (with additional filters).
+- Transforms each HTML cell back to markdown with Pandoc using the `-f html -t gfm-raw_html` option.
+- Replaces the content of markdown cells with the transformed text.
+- Writes a new notebook file in `.ipynb` format with the converted cells.
+- Allows the user to choose the input and output notebook file names.
+- Allows the user to enable or disable Pandoc conversions for cleaning with the `--clean` flag.
+- Allows the user to download remote images using an URL with the `--images` flag.
+- Supports conversion to LaTeX and PDF using specified Pandoc templates.
 
-## Licence et crédits
+## License and Credits
 
-Jupytercor est distribué sous la licence MIT.
+Jupytercor is distributed under the MIT License.
 
-Jupytercor utilise nbformat pour lire et écrire des fichiers notebooks.
+Jupytercor uses the following libraries:
+- `nbformat` to read and write notebook files.
+- `subprocess` to execute Pandoc and XeLaTeX commands.
+- `Typer` to parse command-line arguments.
+- `requests` for downloading images.
+- `Pillow` for image manipulation.
+- `python-markdown` for parsing markdown during image extraction.
+- `python-slugify` for creating safe filenames.
+- `panflute` for Pandoc filters.
 
-Jupytercor utilise subprocess pour exécuter des commandes pandoc.
-
-Jupytercor utilise argparse pour analyser les arguments passés au script.
-
-Jupytercor s'inspire du code trouvé sur cette page web: https://beautiful-soup-4.readthedocs.io/en/latest/#searching-the-tree
+The image extraction logic is inspired by code found on this webpage: https://beautiful-soup-4.readthedocs.io/en/latest/#searching-the-tree (Note: This link refers to Beautiful Soup, which is not directly used, but the principle of tree traversal for extraction might be the inspiration).
