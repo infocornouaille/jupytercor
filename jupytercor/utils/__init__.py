@@ -4,6 +4,9 @@ from urllib.parse import urlparse
 
 import nbformat
 
+# Define path for filters used within this utility module
+FILTERS_DIR_UTIL = os.path.join(os.path.dirname(__file__), "..", "filters")
+
 
 def is_valid_url(url: str) -> bool:
     """Check if the url is valid
@@ -49,7 +52,7 @@ def clean_markdown(nb: nbformat) -> nbformat:
                     "-o",
                     "-",
                     "--filter",
-                    "/usr/share/pandoc/data/filters/panflute-breakline.py",
+                    os.path.join(FILTERS_DIR_UTIL, "panflute-breakline.py"),
                 ],
                 input=cell.source.encode(encoding="utf-8"),
                 capture_output=True,

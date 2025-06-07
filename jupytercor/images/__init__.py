@@ -10,8 +10,8 @@ from markdown.treeprocessors import Treeprocessor
 from PIL import Image
 from slugify import slugify
 
-from jupytercor.extract64 import *
-from jupytercor.utils import *
+from jupytercor.extract64 import extract_image_64, extract_attachemnt_image
+from jupytercor.utils import is_valid_url
 
 # Expression régulière pour remplacer les liens vers les images
 pattern_https = r"\((https?://.+)\)"
@@ -136,28 +136,26 @@ def process_images(nb):
         nb 'notebook': original notebook
     """
     total_images = 0
-    if os.path.exists("images"):
-        print("Le répertoire images existe déjà.")
-    else:
-        # Créer le répertoire
-        try:
-            os.mkdir("images")
-        except OSError as e:
-            # Gérer les éventuelles erreurs
-            print(
-                "Une erreur est survenue lors de la création du répertoire : 'images'"
-            )
-            return None
+    # Create images directory if it doesn't exist
+    try:
+        os.makedirs("images", exist_ok=True)
+    except OSError as e:
+        print(f"Error creating directory 'images': {e}")
+        return None # Or handle error as appropriate
 
-    # Loop through the cells and download images in images folder
+    # Loop through the cells to process images in markdown cells.
+    # The order of operations for each markdown cell is:
+    # 1. Process attachments (if any) using `process_attachemnts`.
+    # 2. Process embedded base64 images using `test_base64`.
+    # 3. Download remote images using `download_image` and update links.
     for cell in nb.cells:
         if cell.cell_type == "markdown":
-            # if "[attachment:" in cell.source:
             if "attachments" in cell:
                 total_images += 1
                 process_attachemnts(cell, total_images)
             cell.source = test_base64(cell.source)
-            download_image(cell.source.encode())
+            # Call download_image with string cell.source, not bytes
+            download_image(cell.source)
             # Appliquer la fonction replace_url sur toutes les occurrences du motif dans le texte avec re.sub
             result = re.sub(pattern_https, replace_url, cell.source)
             cell.source = result
